@@ -120,6 +120,12 @@ export function Navbar({ lang }: { lang: string }) {
                     <TransferIcon /> {t("migration.title")}
                   </Link>
 
+                  {(user?.role === "investor" || isSuperAdmin) && (
+                    <Link href={`/${lang}/investor`} onClick={() => setDropdownOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-cyan dark:text-cyan hover:bg-cyan/5 transition-colors">
+                      <ChartIcon /> Control Room
+                    </Link>
+                  )}
                   {isSuperAdmin && (
                     <Link href={`/${lang}/admin`} onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors border-t border-slate-border mt-1 pt-2">
@@ -188,6 +194,14 @@ function SignOutIcon() {
   return (
     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+    </svg>
+  );
+}
+
+function ChartIcon() {
+  return (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
     </svg>
   );
 }

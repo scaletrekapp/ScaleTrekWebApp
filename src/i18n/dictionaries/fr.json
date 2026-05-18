@@ -29,7 +29,11 @@
     "signOut": "Déconnexion",
     "signIn": "Connexion",
     "register": "S'inscrire",
-    "logIn": "Se connecter"
+    "logIn": "Se connecter",
+    "home": "Accueil",
+    "controlRoom": "Salle de Contrôle",
+    "investor": "Investisseur",
+    "investorRoom": "Salle Investisseur"
   },
   "auth": {
     "welcomeBack": "Bon retour",
@@ -296,6 +300,21 @@
     "underReview": "En cours d'examen",
     "flagged": "Étape signalée pour examen",
     "alreadyFlagged": "Cette étape est déjà en cours d'examen"
+  },
+  "investor": {
+    "title": "Salle de Contrôle Investisseur",
+    "subtitle": "Terminal de découverte et d'analyse de qualité institutionnelle",
+    "totalOpportunities": "Opportunités Totales",
+    "activeDreamers": "Dreamers Actifs",
+    "verifiedReality": "Réalités Vérifiées",
+    "avgMomentum": "Score Momentum Moyen",
+    "networkGrowth": "Croissance (30j)",
+    "ecosystemOverview": "Aperçu de l'Écosystème",
+    "recentActivity": "Activité Récente",
+    "topOpportunities": "Meilleures Opportunités",
+    "exportReport": "Exporter le Rapport",
+    "accessDenied": "Accès Investisseur Uniquement",
+    "accessDeniedMsg": "Ce terminal nécessite des privilèges d'investisseur."
   },
   "legal": {
     "terms": "Conditions d'utilisation",

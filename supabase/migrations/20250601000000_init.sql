@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS public.profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   handle TEXT UNIQUE,
-  role TEXT NOT NULL DEFAULT 'dreamer' CHECK (role IN ('dreamer','investor','admin')),
+  role TEXT NOT NULL DEFAULT 'dreamer' CHECK (role IN ('dreamer','investor','admin','super_admin')),
   verified BOOLEAN DEFAULT false,
   reality_score INTEGER DEFAULT 0,
   momentum_score INTEGER DEFAULT 0,

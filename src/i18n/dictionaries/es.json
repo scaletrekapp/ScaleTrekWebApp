@@ -29,7 +29,11 @@
     "signOut": "Cerrar sesión",
     "signIn": "Iniciar sesión",
     "register": "Registrarse",
-    "logIn": "Acceder"
+    "logIn": "Acceder",
+    "home": "Inicio",
+    "controlRoom": "Sala de Control",
+    "investor": "Inversor",
+    "investorRoom": "Sala de Inversores"
   },
   "auth": {
     "welcomeBack": "Bienvenido de nuevo",
@@ -296,6 +300,21 @@
     "underReview": "En revisión",
     "flagged": "Hito reportado para revisión",
     "alreadyFlagged": "Este hito ya está en revisión"
+  },
+  "investor": {
+    "title": "Sala de Control del Inversor",
+    "subtitle": "Terminal de descubrimiento y análisis de grado institucional",
+    "totalOpportunities": "Oportunidades Totales",
+    "activeDreamers": "Soñadores Activos",
+    "verifiedReality": "Realidad Verificada",
+    "avgMomentum": "Puntaje Promedio de Momentum",
+    "networkGrowth": "Crecimiento (30d)",
+    "ecosystemOverview": "Resumen del Ecosistema",
+    "recentActivity": "Actividad Reciente",
+    "topOpportunities": "Mejores Oportunidades",
+    "exportReport": "Exportar Informe",
+    "accessDenied": "Solo Inversores",
+    "accessDeniedMsg": "Este terminal requiere privilegios de inversor."
   },
   "legal": {
     "terms": "Términos del Servicio",

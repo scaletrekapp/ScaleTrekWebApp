@@ -7,13 +7,11 @@ import { Navbar } from "@/components/layout/Navbar";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { createClient } from "@/lib/supabase-client";
-import type { User } from "@/types";
 
 export default function EditProfilePage({ params: { lang } }: { params: { lang: string } }) {
   const { t } = useTranslation();
   const router = useRouter();
-  const authUser = useAuthStore((s) => s.user);
-  const { setUser } = useAuthStore();
+  const { user: authUser, isLoading, setUser } = useAuthStore();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [form, setForm] = useState({
@@ -21,6 +19,7 @@ export default function EditProfilePage({ params: { lang } }: { params: { lang: 
   });
 
   useEffect(() => {
+    if (isLoading) return;
     if (!authUser) { router.push(`/${lang}`); return; }
     setForm({
       handle: authUser.handle || "",
@@ -31,7 +30,7 @@ export default function EditProfilePage({ params: { lang } }: { params: { lang: 
       companyName: authUser.companyName || "",
       sector: authUser.sector || "",
     });
-  }, [authUser, router, lang]);
+  }, [authUser, isLoading, router, lang]);
 
   const handleSave = async () => {
     if (!authUser) return;

@@ -29,7 +29,11 @@
     "signOut": "Sign Out",
     "signIn": "Sign In",
     "register": "Register",
-    "logIn": "Log In"
+    "logIn": "Log In",
+    "home": "Home",
+    "controlRoom": "Control Room",
+    "investor": "Investor",
+    "investorRoom": "Investor Room"
   },
   "auth": {
     "welcomeBack": "Welcome Back",
@@ -296,6 +300,21 @@
     "underReview": "Under Review",
     "flagged": "Milestone flagged for review",
     "alreadyFlagged": "This milestone is already under review"
+  },
+  "investor": {
+    "title": "Investor Control Room",
+    "subtitle": "Institutional-grade discovery & analytics terminal",
+    "totalOpportunities": "Total Opportunities",
+    "activeDreamers": "Active Dreamers",
+    "verifiedReality": "Verified Reality",
+    "avgMomentum": "Avg Momentum Score",
+    "networkGrowth": "Network Growth (30d)",
+    "ecosystemOverview": "Ecosystem Overview",
+    "recentActivity": "Recent Activity",
+    "topOpportunities": "Top Opportunities",
+    "exportReport": "Export Report",
+    "accessDenied": "Investor Access Only",
+    "accessDeniedMsg": "This terminal requires investor-level privileges."
   },
   "legal": {
     "terms": "Terms of Service",

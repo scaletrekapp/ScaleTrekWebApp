@@ -29,7 +29,11 @@
     "signOut": "تسجيل الخروج",
     "signIn": "تسجيل الدخول",
     "register": "التسجيل",
-    "logIn": "دخول"
+    "logIn": "دخول",
+    "home": "الرئيسية",
+    "controlRoom": "غرفة التحكم",
+    "investor": "مستثمر",
+    "investorRoom": "غرفة المستثمر"
   },
   "auth": {
     "welcomeBack": "مرحبًا بعودتك",
@@ -296,6 +300,21 @@
     "underReview": "قيد المراجعة",
     "flagged": "تم الإبلاغ عن المرحلة",
     "alreadyFlagged": "هذه المرحلة قيد المراجعة بالفعل"
+  },
+  "investor": {
+    "title": "غرفة التحكم للمستثمرين",
+    "subtitle": "محطة اكتشاف وتحليل مؤسسية",
+    "totalOpportunities": "إجمالي الفرص",
+    "activeDreamers": "الحالمون النشطون",
+    "verifiedReality": "واقع مُوثق",
+    "avgMomentum": "متوسط الزخم",
+    "networkGrowth": "نمو الشبكة (30 يوم)",
+    "ecosystemOverview": "نظرة عامة على النظام",
+    "recentActivity": "النشاط الأخير",
+    "topOpportunities": "أفضل الفرص",
+    "exportReport": "تصدير التقرير",
+    "accessDenied": "للمستثمرين فقط",
+    "accessDeniedMsg": "هذا الطرفية تتطلب صلاحيات مستثمر."
   },
   "legal": {
     "terms": "شروط الخدمة",
