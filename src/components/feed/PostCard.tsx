@@ -1,5 +1,7 @@
 "use client";
 
+import { motion, AnimatePresence } from "framer-motion";
+import { MagneticButton } from "@/components/ui/MagneticButton";
 import { useState } from "react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
@@ -64,6 +66,13 @@ export function PostCard({ post }: PostCardProps) {
   };
 
   return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -2, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+    >
     <GlassCard variant="dark" className="overflow-hidden">
       {(post.mediaUrl || post.media?.[0]) && (
         <div className="relative -mx-4 -mt-4 mb-4 h-48 sm:h-56 overflow-hidden">
@@ -134,8 +143,11 @@ export function PostCard({ post }: PostCardProps) {
       </div>
 
       <div className="flex items-center gap-3 pt-3 border-t border-slate-border dark:border-slate-border">
-        <button
+        <motion.button
           onClick={handleLike}
+          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             post.liked
               ? "bg-violet/10 text-violet"
@@ -146,9 +158,12 @@ export function PostCard({ post }: PostCardProps) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
           {t("post.like")}
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={handleSignal}
+          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             post.signaled
               ? "bg-cyan/10 text-cyan"
@@ -159,58 +174,93 @@ export function PostCard({ post }: PostCardProps) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
           </svg>
           {t("post.signal")}
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={() => setShowComments(!showComments)}
+          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-muted hover:text-midnight dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-all"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
           {t("post.comment")}
-        </button>
-        <button
+        </motion.button>
+        <motion.button
           onClick={() => setDisputeOpen(true)}
+          whileTap={{ scale: 0.9 }}
+          whileHover={{ scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 400, damping: 17 }}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-muted hover:text-red-500 hover:bg-red-500/5 transition-all"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
           </svg>
           {t("post.flag")}
-        </button>
+        </motion.button>
       </div>
 
-      {showComments && <CommentsSection postId={post.id} />}
+      <AnimatePresence>
+        {showComments && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <CommentsSection postId={post.id} />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {disputeOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4" onClick={() => setDisputeOpen(false)}>
-          <div className="w-full max-w-md bg-white dark:bg-midnight2 rounded-2xl border border-slate-border shadow-2xl p-6" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-base font-bold text-midnight dark:text-white mb-2">{t("dispute.flagMilestone")}</h3>
-            <textarea
-              value={disputeReason}
-              onChange={(e) => setDisputeReason(e.target.value)}
-              placeholder={t("dispute.reasonPlaceholder")}
-              rows={3}
-              className="w-full px-3 py-2 rounded-xl bg-black/5 dark:bg-white/5 border border-slate-border text-sm text-midnight dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/40 resize-none"
-            />
-            <div className="flex items-center justify-end gap-2 mt-4">
-              <button
-                onClick={() => setDisputeOpen(false)}
-                className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-muted hover:text-midnight dark:hover:text-white transition-colors"
-              >
-                {t("common.cancel")}
-              </button>
-              <button
-                onClick={handleDispute}
-                disabled={disputeSubmitting || !disputeReason.trim()}
-                className="px-4 py-2 rounded-lg text-xs font-semibold bg-red-500 text-white hover:brightness-110 transition-all disabled:opacity-50"
-              >
-                {disputeSubmitting ? t("common.loading") : t("dispute.submit")}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {disputeOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setDisputeOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="w-full max-w-md bg-white dark:bg-midnight2 rounded-2xl border border-slate-border shadow-2xl p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-base font-bold text-midnight dark:text-white mb-2">{t("dispute.flagMilestone")}</h3>
+              <textarea
+                value={disputeReason}
+                onChange={(e) => setDisputeReason(e.target.value)}
+                placeholder={t("dispute.reasonPlaceholder")}
+                rows={3}
+                className="w-full px-3 py-2 rounded-xl bg-black/5 dark:bg-white/5 border border-slate-border text-sm text-midnight dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500/40 resize-none"
+              />
+              <div className="flex items-center justify-end gap-2 mt-4">
+                <button
+                  onClick={() => setDisputeOpen(false)}
+                  className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-muted hover:text-midnight dark:hover:text-white transition-colors"
+                >
+                  {t("common.cancel")}
+                </button>
+                <MagneticButton
+                  onClick={handleDispute}
+                  disabled={disputeSubmitting || !disputeReason.trim()}
+                  variant="danger"
+                  size="md"
+                  loading={disputeSubmitting}
+                >
+                  {disputeSubmitting ? t("common.loading") : t("dispute.submit")}
+                </MagneticButton>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </GlassCard>
+    </motion.div>
   );
 }
