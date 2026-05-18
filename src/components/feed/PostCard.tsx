@@ -6,6 +6,8 @@ import { MetricTicker } from "@/components/ui/MetricTicker";
 import { MomentumPill } from "@/components/ui/MomentumPill";
 import type { ShowcasePost } from "@/types";
 import { useFeedStore } from "@/stores/useFeedStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { createClient } from "@/lib/supabase-client";
 
 interface PostCardProps {
   post: ShowcasePost;
@@ -13,15 +15,37 @@ interface PostCardProps {
 
 export function PostCard({ post }: PostCardProps) {
   const { toggleLike, toggleSignal } = useFeedStore();
+  const user = useAuthStore((s) => s.user);
   const isDreamer = post.type === "dreamer";
+
+  const handleLike = async () => {
+    if (!user) return;
+    toggleLike(post.id);
+    const supabase = createClient();
+    if (post.liked) {
+      await supabase.from("post_likes").delete().eq("post_id", post.id).eq("user_id", user.id);
+    } else {
+      await supabase.from("post_likes").insert({ post_id: post.id, user_id: user.id });
+    }
+  };
+
+  const handleSignal = async () => {
+    if (!user) return;
+    toggleSignal(post.id);
+    const supabase = createClient();
+    if (post.signaled) {
+      await supabase.from("post_signals").delete().eq("post_id", post.id).eq("user_id", user.id);
+    } else {
+      await supabase.from("post_signals").insert({ post_id: post.id, user_id: user.id });
+    }
+  };
 
   return (
     <GlassCard variant="dark" className="overflow-hidden">
-      {post.mediaUrl && (
+      {(post.mediaUrl || post.media?.[0]) && (
         <div className="relative -mx-4 -mt-4 mb-4 h-48 sm:h-56 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={post.mediaUrl}
+            src={post.mediaUrl || post.media![0].url}
             alt={post.title}
             className="w-full h-full object-cover"
           />
@@ -88,7 +112,7 @@ export function PostCard({ post }: PostCardProps) {
 
       <div className="flex items-center gap-3 pt-3 border-t border-slate-border dark:border-slate-border">
         <button
-          onClick={() => toggleLike(post.id)}
+          onClick={handleLike}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             post.liked
               ? "bg-violet/10 text-violet"
@@ -101,7 +125,7 @@ export function PostCard({ post }: PostCardProps) {
           Like
         </button>
         <button
-          onClick={() => toggleSignal(post.id)}
+          onClick={handleSignal}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             post.signaled
               ? "bg-cyan/10 text-cyan"

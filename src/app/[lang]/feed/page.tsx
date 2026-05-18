@@ -4,48 +4,77 @@ import { Navbar } from "@/components/layout/Navbar";
 import { FeedTabs, SortPills, PostCard } from "@/components/feed";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { useFeedStore } from "@/stores/useFeedStore";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase-client";
 import type { ShowcasePost } from "@/types";
-
-const MOCK_POSTS: ShowcasePost[] = [
-  {
-    id: "p1", userId: "u1",
-    user: { id: "u1", handle: "neon_pioneer", role: "dreamer", verified: false, realityScore: 0, momentumScore: 72, joinedAt: new Date().toISOString() },
-    type: "dreamer", title: "Neural Interface Prototype V2", description: "Completed the second iteration of our non-invasive BCI headband. 128-channel readout with real-time signal processing on edge hardware. Next step: FDA pre-submission.",
-    mediaUrl: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600", mediaType: "image",
-    milestone: "Prototype V2 Finished", milestoneDate: new Date().toISOString(), likes: 47, comments: 12, signals: 8, riskLevel: 85, createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-  },
-  {
-    id: "p2", userId: "u2",
-    user: { id: "u2", handle: "veridian_works", role: "dreamer", verified: true, realityScore: 92, momentumScore: 45, joinedAt: new Date().toISOString() },
-    type: "reality", title: "Q1 2026: 10k MAD MRR Milestone", description: "Hit 10,000 MAD in monthly recurring revenue for our SaaS platform. 200+ B2B customers across EMEA. 94% gross margin.",
-    mediaUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600", mediaType: "image",
-    milestone: "First 10k MAD Revenue", milestoneDate: new Date().toISOString(), likes: 156, comments: 28, signals: 45, riskLevel: 20, createdAt: new Date(Date.now() - 86400000 * 7).toISOString(), realityScore: "gold",
-  },
-  {
-    id: "p3", userId: "u3",
-    user: { id: "u3", handle: "cyber_forge", role: "dreamer", verified: true, realityScore: 65, momentumScore: 88, joinedAt: new Date().toISOString() },
-    type: "dreamer", title: "Decentralized Mesh Network — Field Test Alpha", description: "Deployed 12 nodes across a 5km radius. Packet delivery at 94% with sub-50ms latency. Zero infrastructure required.",
-    mediaUrl: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600", mediaType: "image",
-    milestone: "Field Test Alpha Complete", milestoneDate: new Date().toISOString(), likes: 89, comments: 34, signals: 22, riskLevel: 60, createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-  },
-  {
-    id: "p4", userId: "u4",
-    user: { id: "u4", handle: "aether_capital", role: "investor", verified: true, realityScore: 100, momentumScore: 0, joinedAt: new Date().toISOString() },
-    type: "reality", title: "Closed $500k Seed Round with Veridian Ventures", description: "Led by Veridian Ventures with participation from angel syndicate. Post-money valuation $4.2M.",
-    mediaUrl: "https://images.unsplash.com/photo-1614027164847-1b28cfe1df60?w=600", mediaType: "image",
-    milestone: "Seed Round Closed", milestoneDate: new Date().toISOString(), likes: 203, comments: 41, signals: 67, riskLevel: 15, createdAt: new Date(Date.now() - 86400000 * 14).toISOString(), realityScore: "platinum",
-  },
-];
 
 export default function FeedPage({ params: { lang } }: { params: { lang: string } }) {
   const { t } = useTranslation();
   const { posts, setPosts, feedView, sortMode } = useFeedStore();
+  const user = useAuthStore((s) => s.user);
   const [riskSlider, setRiskSlider] = useState(50);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setPosts(MOCK_POSTS);
+    const supabase = createClient();
+    setLoading(true);
+
+    supabase
+      .from("posts")
+      .select(`
+        *,
+        user:user_id(*),
+        media:post_media(*),
+        likes:post_likes(count),
+        signals:post_signals(count)
+      `)
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("Failed to fetch posts:", error);
+          return;
+        }
+        if (data) {
+          const mapped: ShowcasePost[] = data.map((p) => ({
+            id: p.id,
+            userId: p.user_id,
+            user: {
+              id: p.user.id,
+              handle: p.user.handle,
+              avatar: p.user.avatar_url,
+              role: p.user.role,
+              verified: p.user.verified,
+              realityScore: p.user.reality_score,
+              momentumScore: p.user.momentum_score,
+              joinedAt: p.user.created_at,
+              headline: p.user.headline,
+              isPro: p.user.is_pro,
+            },
+            type: p.type,
+            title: p.title,
+            description: p.description || "",
+            milestone: p.milestone || "",
+            milestoneDate: p.milestone_date || p.created_at,
+            riskLevel: p.risk_level,
+            realityScore: p.reality_score,
+            likes: p.likes?.[0]?.count ?? 0,
+            comments: 0,
+            signals: p.signals?.[0]?.count ?? 0,
+            createdAt: p.created_at,
+            media: (p.media || []).map((m: { id: string; url: string; type: string; order: number }) => ({
+              id: m.id,
+              postId: p.id,
+              url: m.url,
+              type: m.type as "image" | "video",
+              order: m.order,
+            })),
+          }));
+          setPosts(mapped);
+        }
+        setLoading(false);
+      });
   }, [setPosts]);
 
   const filtered = posts.filter((p) => {
@@ -70,7 +99,6 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
     <div className="min-h-screen bg-white dark:bg-midnight">
       <Navbar lang={lang} />
       <main className="max-w-3xl mx-auto px-4 py-8">
-        {/* Control Room */}
         <GlassCard variant="dark" className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
@@ -107,14 +135,16 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
           </div>
         </GlassCard>
 
-        {/* Feed Controls */}
         <div className="flex items-center justify-between mb-6">
           <FeedTabs />
           <SortPills />
         </div>
 
-        {/* Post Stream */}
-        {sorted.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center py-20">
+            <div className="w-8 h-8 border-2 border-violet border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : sorted.length === 0 ? (
           <div className="text-center py-20">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center">
               <svg className="w-8 h-8 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>

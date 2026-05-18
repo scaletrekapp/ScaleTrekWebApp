@@ -1,14 +1,43 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Navbar } from "@/components/layout/Navbar";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { createClient } from "@/lib/supabase-client";
 
 export default function SubscriptionPage({ params: { lang } }: { params: { lang: string } }) {
   const { t } = useTranslation();
-  const { tier, isPro, interestRegistered, setInterestRegistered } = useSubscriptionStore();
+  const user = useAuthStore((s) => s.user);
+  const { tier, isPro, interestRegistered, setSubscription, setInterestRegistered } = useSubscriptionStore();
+
+  useEffect(() => {
+    if (!user) return;
+    const supabase = createClient();
+    supabase.from("subscriptions").select("*").eq("user_id", user.id).single().then(({ data }) => {
+      if (data) {
+        setSubscription(data.tier, data.status);
+        setInterestRegistered(data.interest_registered);
+      }
+    });
+  }, [user, setSubscription, setInterestRegistered]);
+
+  const handleInterest = async () => {
+    const supabase = createClient();
+    const newVal = !interestRegistered;
+    setInterestRegistered(newVal);
+    if (user) {
+      await supabase.from("subscriptions").upsert({
+        user_id: user.id,
+        tier: "free",
+        status: "active",
+        interest_registered: newVal,
+      }, { onConflict: "user_id" });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
@@ -26,7 +55,6 @@ export default function SubscriptionPage({ params: { lang } }: { params: { lang:
           </p>
         </div>
 
-        {/* Current Plan */}
         <GlassCard variant="dark" className="mb-6 text-center">
           <div className="py-4">
             <Badge
@@ -39,7 +67,7 @@ export default function SubscriptionPage({ params: { lang } }: { params: { lang:
               {t("subscription.comingSoon")}
             </p>
             <button
-              onClick={() => setInterestRegistered(!interestRegistered)}
+              onClick={handleInterest}
               className={`mt-4 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all ${
                 interestRegistered
                   ? "bg-green-500/10 text-green-500 border border-green-500/20 cursor-default"
@@ -51,7 +79,6 @@ export default function SubscriptionPage({ params: { lang } }: { params: { lang:
           </div>
         </GlassCard>
 
-        {/* Perks */}
         <GlassCard variant="dark">
           <h2 className="text-xs font-semibold text-slate-muted uppercase tracking-wider mb-4">
             {t("subscription.perks.title")}

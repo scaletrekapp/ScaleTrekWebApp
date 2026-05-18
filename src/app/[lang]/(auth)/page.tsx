@@ -2,26 +2,96 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
+import { createClient } from "@/lib/supabase-client";
+import { useAuthStore } from "@/stores/useAuthStore";
 
 export default function AuthPage({ params: { lang } }: { params: { lang: string } }) {
   const { t } = useTranslation();
+  const router = useRouter();
+  const { setUser } = useAuthStore();
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const supabase = createClient();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Supabase auth integration placeholder
+    setError("");
+    setLoading(true);
+
+    try {
+      if (mode === "signup") {
+        const { data, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { username, name, role: "dreamer" },
+          },
+        });
+        if (signUpError) throw signUpError;
+        if (data.user) {
+          setUser({
+            id: data.user.id,
+            handle: username,
+            role: "dreamer",
+            verified: false,
+            realityScore: 0,
+            momentumScore: 0,
+            joinedAt: data.user.created_at,
+          });
+        }
+      } else {
+        const { data, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (signInError) throw signInError;
+        if (data.user) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", data.user.id)
+            .single();
+          if (profile) {
+            setUser({
+              id: profile.id,
+              handle: profile.handle,
+              role: profile.role,
+              verified: profile.verified,
+              realityScore: profile.reality_score,
+              momentumScore: profile.momentum_score,
+              headline: profile.headline,
+              location: profile.location,
+              website: profile.website,
+              companyName: profile.company_name,
+              sector: profile.sector,
+              bio: profile.bio,
+              isPro: profile.is_pro,
+              avatar: profile.avatar_url,
+              coverUrl: profile.cover_url,
+              joinedAt: profile.created_at,
+            });
+          }
+        }
+      }
+      router.push(`/${lang}/feed`);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Authentication failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
-      {/* Left - Brand */}
       <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-midnight via-midnight2 to-midnight3 border-r border-slate-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet to-cyan flex items-center justify-center shadow-lg shadow-violet/20">
@@ -53,7 +123,6 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
         </div>
       </div>
 
-      {/* Right - Auth Form */}
       <div className="flex items-center justify-center p-8 bg-white dark:bg-midnight">
         <div className="w-full max-w-sm">
           <div className="lg:hidden flex items-center justify-between mb-8">
@@ -82,6 +151,12 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
             </button>
           </p>
 
+          {error && (
+            <div className="mb-4 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 text-sm">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (
               <>
@@ -95,6 +170,7 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
                     onChange={(e) => setName(e.target.value)}
                     className="w-full px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/5 border border-slate-border dark:border-slate-border text-midnight dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all"
                     placeholder="Omar El Khatib"
+                    required
                   />
                 </div>
                 <div>
@@ -109,6 +185,7 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
                       onChange={(e) => setUsername(e.target.value)}
                       className="w-full pl-8 pr-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/5 border border-slate-border dark:border-slate-border text-midnight dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all"
                       placeholder="omar_elkh"
+                      required
                     />
                   </div>
                 </div>
@@ -124,6 +201,7 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/5 border border-slate-border dark:border-slate-border text-midnight dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all"
                 placeholder="omar@example.com"
+                required
               />
             </div>
             <div>
@@ -136,6 +214,8 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl bg-black/5 dark:bg-white/5 border border-slate-border dark:border-slate-border text-midnight dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all"
                 placeholder="••••••••"
+                required
+                minLength={6}
               />
               {mode === "signin" && (
                 <div className="text-right mt-1">
@@ -147,9 +227,10 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
             </div>
             <button
               type="submit"
-              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-violet to-violet-dark text-white font-semibold text-sm hover:brightness-110 transition-all active:scale-[0.98]"
+              disabled={loading}
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-violet to-violet-dark text-white font-semibold text-sm hover:brightness-110 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {mode === "signin" ? t("auth.signIn") : t("auth.signUp")}
+              {loading ? "..." : (mode === "signin" ? t("auth.signIn") : t("auth.signUp"))}
             </button>
           </form>
 

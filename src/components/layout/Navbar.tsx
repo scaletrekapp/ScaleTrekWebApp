@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { createClient } from "@/lib/supabase-client";
 
 const NAV_ITEMS = [
   { key: "feed", href: "/feed", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
@@ -14,7 +16,17 @@ const NAV_ITEMS = [
 
 export function Navbar({ lang }: { lang: string }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { t } = useTranslation();
+  const { user, setUser } = useAuthStore();
+  const isAdmin = user?.role === "admin";
+
+  const handleSignOut = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    setUser(null);
+    router.push(`/${lang}`);
+  };
 
   return (
     <header className="sticky top-0 z-40 border-b border-slate-border dark:border-slate-border bg-white/80 dark:bg-midnight/80 backdrop-blur-xl">
@@ -48,9 +60,50 @@ export function Navbar({ lang }: { lang: string }) {
               </Link>
             );
           })}
+          {user && (
+            <Link
+              href={`/${lang}/profile`}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                pathname === `/${lang}/profile`
+                  ? "bg-violet/10 text-violet"
+                  : "text-slate-muted hover:text-midnight dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+              Profile
+            </Link>
+          )}
+          {isAdmin && (
+            <Link
+              href={`/${lang}/admin`}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                pathname === `/${lang}/admin`
+                  ? "bg-red-500/10 text-red-500"
+                  : "text-slate-muted hover:text-midnight dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
+              }`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              Admin
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
+          {user && (
+            <button
+              onClick={handleSignOut}
+              className="hidden sm:flex items-center gap-1 px-2 py-1.5 rounded-lg text-xs font-medium text-slate-muted hover:text-red-500 hover:bg-red-500/10 transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+              </svg>
+              Sign out
+            </button>
+          )}
           <LanguageSelector />
           <ThemeToggle />
         </div>
