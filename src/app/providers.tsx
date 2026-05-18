@@ -7,6 +7,7 @@ import i18n from "@/i18n";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase-client";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { AnimatedGradient } from "@/components/ui/AnimatedGradient";
 
 function SessionRestorer({ children }: { children: React.ReactNode }) {
   const { setUser, setLoading } = useAuthStore();
@@ -83,6 +84,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <I18nextProvider i18n={i18n}>
         <SessionRestorer>
+          <AnimatedGradient />
           {children}
         </SessionRestorer>
       </I18nextProvider>

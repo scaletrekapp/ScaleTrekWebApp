@@ -3,6 +3,11 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { FeedTabs, SortPills, PostCard } from "@/components/feed";
 import { GlassCard } from "@/components/ui/GlassCard";
+import { SocialTicker } from "@/components/ui/SocialTicker";
+import { LiveIndicator } from "@/components/ui/LiveIndicator";
+import { SkeletonCard } from "@/components/ui/SkeletonCard";
+import { AnimatedEmptyState } from "@/components/ui/AnimatedEmptyState";
+import { ParticleField } from "@/components/ui/ParticleField";
 import { useFeedStore } from "@/stores/useFeedStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useTranslation } from "react-i18next";
@@ -34,6 +39,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
       .then(({ data, error }) => {
         if (error) {
           console.error("Failed to fetch posts:", error);
+          setLoading(false);
           return;
         }
         if (data) {
@@ -98,39 +104,68 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
       <Navbar lang={lang} />
-      <main className="max-w-3xl mx-auto px-4 py-8">
-        <GlassCard variant="dark" className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2">
-              <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
-              </svg>
-              <span className="text-sm font-semibold text-midnight dark:text-white">{t("feed.controlRoom")}</span>
-            </div>
-            <span className="text-xs text-slate-muted">
-              {sorted.length} {t("feed.matching")}
-            </span>
-          </div>
+      <SocialTicker />
+      <main className="max-w-3xl mx-auto px-4 py-8 relative">
+        <ParticleField count={8} color="#8B5CF6" />
 
-          <div className="space-y-3">
-            <div className="flex items-center justify-between text-xs text-slate-muted">
-              <span>{t("feed.highRiskDreamers")}</span>
-              <span>{t("feed.lowRiskReality")}</span>
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-bold text-midnight dark:text-white">{t("feed.explore")}</h1>
+            {!loading && (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet/10 text-violet font-semibold">
+                {sorted.length} {t("feed.posts")}
+              </span>
+            )}
+          </div>
+          <LiveIndicator compact />
+        </div>
+
+        <GlassCard variant="dark" className="mb-8 relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-r from-violet/5 via-transparent to-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet/20 to-cyan/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="text-sm font-semibold text-midnight dark:text-white">{t("feed.controlRoom")}</span>
+                  <p className="text-[10px] text-slate-muted">{t("feed.hint")}</p>
+                </div>
+              </div>
+              <span className="text-xs text-slate-muted font-mono">
+                {sorted.length} {t("feed.matching")}
+              </span>
             </div>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              value={riskSlider}
-              onChange={(e) => setRiskSlider(Number(e.target.value))}
-              className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-gradient-to-r from-violet via-violet/50 to-cyan"
-              style={{
-                accentColor: riskSlider < 40 ? "#8B5CF6" : riskSlider > 60 ? "#06B6D4" : "#8B5CF6",
-              }}
-            />
-            <div className="flex items-center justify-between text-xs font-semibold">
-              <span className="text-violet">{t("feed.blueprint")}</span>
-              <span className="text-cyan">{t("feed.steel")}</span>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between text-xs text-slate-muted">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet animate-pulse-dot" />
+                  {t("feed.highRiskDreamers")}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse-dot" style={{ animationDelay: "0.5s" }} />
+                  {t("feed.lowRiskReality")}
+                </span>
+              </div>
+              <input
+                type="range"
+                min={0}
+                max={100}
+                value={riskSlider}
+                onChange={(e) => setRiskSlider(Number(e.target.value))}
+                className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-gradient-to-r from-violet via-violet/50 to-cyan"
+                style={{
+                  accentColor: riskSlider < 40 ? "#8B5CF6" : riskSlider > 60 ? "#06B6D4" : "#8B5CF6",
+                }}
+              />
+              <div className="flex items-center justify-between text-xs font-semibold">
+                <span className="text-violet">{t("feed.blueprint")}</span>
+                <span className="text-cyan">{t("feed.steel")}</span>
+              </div>
             </div>
           </div>
         </GlassCard>
@@ -141,18 +176,16 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-20">
-            <div className="w-8 h-8 border-2 border-violet border-t-transparent rounded-full animate-spin" />
-          </div>
+          <SkeletonCard variant="feed" count={3} />
         ) : sorted.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center">
-              <svg className="w-8 h-8 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-              </svg>
-            </div>
-            <p className="text-slate-muted text-sm">{t("feed.empty")}</p>
-          </div>
+          <GlassCard variant="dark">
+            <AnimatedEmptyState
+              variant={feedView === "dreamer" ? "dreamer" : feedView === "reality" ? "reality" : "default"}
+              title={t("feed.empty")}
+              description="Adjust the risk slider or change your feed view to discover more opportunities."
+              action={user ? { label: "Create Post", onClick: () => window.location.href = `/${lang}/create` } : undefined}
+            />
+          </GlassCard>
         ) : (
           <div className="space-y-4">
             {sorted.map((post) => (
