@@ -46,7 +46,7 @@
     "signInLink": "Sign in",
     "orContinue": "or continue with",
     "forgotPassword": "Forgot password?",
-    "terms": "By continuing, you agree to ScaleTrek's Terms of Service and Privacy Policy."
+    "terms": "By continuing, you agree to ScaleTrek's"
   },
   "feed": {
     "explore": "Explore",
@@ -100,7 +100,22 @@
     "verified": "Verified",
     "joined": "Joined",
     "exportDossier": "Export Dossier",
-    "dossierReady": "Dossier ready for download"
+    "dossierReady": "Dossier ready for download",
+    "edit": {
+      "title": "Edit Profile",
+      "handle": "Handle",
+      "headline": "Headline",
+      "bio": "Bio",
+      "location": "Location",
+      "website": "Website",
+      "company": "Company Name",
+      "sector": "Sector",
+      "save": "Save Changes",
+      "saving": "Saving...",
+      "saved": "Profile updated"
+    },
+    "comments": "comments",
+    "postComment": "Post comment"
   },
   "subscription": {
     "title": "ScaleTrek Pro",
@@ -281,6 +296,16 @@
     "underReview": "Under Review",
     "flagged": "Milestone flagged for review",
     "alreadyFlagged": "This milestone is already under review"
+  },
+  "legal": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "lastUpdated": "Last updated",
+    "intro": "By using ScaleTrek, you agree to these terms. ScaleTrek is a discovery matching platform — we do not handle funds, execute trades, or facilitate financial transactions.",
+    "noLiability": "ScaleTrek provides a matching service only. All investment decisions, due diligence, legal contracts, and capital transfers occur entirely off-platform. We are not liable for any financial losses, disputes, or outcomes arising from connections made through the platform.",
+    "userResponsibility": "Users are responsible for verifying the accuracy of their own profile information, conducting independent due diligence on any counterparty, and complying with all applicable Moroccan laws and regulations.",
+    "dataUsage": "We collect profile information, usage data, and communication metadata to operate and improve the platform. We do not sell personal data. Data is stored securely on Supabase infrastructure.",
+    "contact": "For questions about these terms, contact support@scaletrek.app"
   },
   "migration": {
     "title": "Profile Migration",

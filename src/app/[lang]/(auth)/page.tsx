@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
@@ -227,7 +228,7 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
 
           <div className="mt-6 text-center">
             <p className="text-xs text-slate-muted">
-              {t("auth.terms")}
+              {t("auth.terms")} <Link href={`/${lang}/terms`} className="text-violet hover:underline">{t("legal.terms")}</Link> & <Link href={`/${lang}/privacy`} className="text-violet hover:underline">{t("legal.privacy")}</Link>.
             </p>
           </div>
         </div>

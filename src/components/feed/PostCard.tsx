@@ -5,6 +5,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { MetricTicker } from "@/components/ui/MetricTicker";
 import { MomentumPill } from "@/components/ui/MomentumPill";
+import { CommentsSection } from "./CommentsSection";
 import type { ShowcasePost } from "@/types";
 import { useFeedStore } from "@/stores/useFeedStore";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -23,6 +24,7 @@ export function PostCard({ post }: PostCardProps) {
   const [disputeOpen, setDisputeOpen] = useState(false);
   const [disputeReason, setDisputeReason] = useState("");
   const [disputeSubmitting, setDisputeSubmitting] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const handleLike = async () => {
     if (!user) return;
@@ -159,6 +161,15 @@ export function PostCard({ post }: PostCardProps) {
           {t("post.signal")}
         </button>
         <button
+          onClick={() => setShowComments(!showComments)}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-muted hover:text-midnight dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-all"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          {t("post.comment")}
+        </button>
+        <button
           onClick={() => setDisputeOpen(true)}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-muted hover:text-red-500 hover:bg-red-500/5 transition-all"
         >
@@ -168,6 +179,8 @@ export function PostCard({ post }: PostCardProps) {
           {t("post.flag")}
         </button>
       </div>
+
+      {showComments && <CommentsSection postId={post.id} />}
 
       {disputeOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4" onClick={() => setDisputeOpen(false)}>

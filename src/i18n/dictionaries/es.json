@@ -46,7 +46,7 @@
     "signInLink": "Inicia sesión",
     "orContinue": "o continúa con",
     "forgotPassword": "¿Olvidaste tu contraseña?",
-    "terms": "Al continuar, aceptas los Términos de Servicio y la Política de Privacidad de ScaleTrek."
+    "terms": "Al continuar, aceptas los"
   },
   "feed": {
     "explore": "Explorar",
@@ -100,7 +100,22 @@
     "verified": "Verificado",
     "joined": "Se unió",
     "exportDossier": "Exportar Dossier",
-    "dossierReady": "Dossier listo para descargar"
+    "dossierReady": "Dossier listo para descargar",
+    "edit": {
+      "title": "Editar Perfil",
+      "handle": "Usuario",
+      "headline": "Título",
+      "bio": "Biografía",
+      "location": "Ubicación",
+      "website": "Sitio web",
+      "company": "Empresa",
+      "sector": "Sector",
+      "save": "Guardar Cambios",
+      "saving": "Guardando...",
+      "saved": "Perfil actualizado"
+    },
+    "comments": "comentarios",
+    "postComment": "Publicar comentario"
   },
   "subscription": {
     "title": "ScaleTrek Pro",
@@ -281,6 +296,16 @@
     "underReview": "En revisión",
     "flagged": "Hito reportado para revisión",
     "alreadyFlagged": "Este hito ya está en revisión"
+  },
+  "legal": {
+    "terms": "Términos del Servicio",
+    "privacy": "Política de Privacidad",
+    "lastUpdated": "Última actualización",
+    "intro": "Al usar ScaleTrek, aceptas estos términos. ScaleTrek es una plataforma de emparejamiento — no manejamos fondos, ejecutamos transacciones ni facilitamos transferencias financieras.",
+    "noLiability": "ScaleTrek proporciona un servicio de emparejamiento únicamente. Todas las decisiones de inversión, diligencia debida, contratos legales y transferencias de capital ocurren completamente fuera de la plataforma. No somos responsables por pérdidas financieras, disputas o resultados derivados de conexiones realizadas a través de la plataforma.",
+    "userResponsibility": "Los usuarios son responsables de verificar la exactitud de la información de su perfil, realizar la diligencia debida independiente sobre cualquier contraparte y cumplir con todas las leyes y regulaciones marroquíes aplicables.",
+    "dataUsage": "Recopilamos información del perfil, datos de uso y metadatos de comunicación para operar y mejorar la plataforma. No vendemos datos personales. Los datos se almacenan de forma segura en la infraestructura de Supabase.",
+    "contact": "Para preguntas sobre estos términos, contacta a support@scaletrek.app"
   },
   "migration": {
     "title": "Migración de Perfil",

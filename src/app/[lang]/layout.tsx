@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "ScaleTrek — The Blueprint Meets The Steel",
   description:
     "An elite investment discovery network bridging visionary Dreamers and verified Reality Checks in the Moroccan and regional ecosystem.",
+  icons: { icon: "/favicon.svg" },
 };
 
 export async function generateStaticParams() {

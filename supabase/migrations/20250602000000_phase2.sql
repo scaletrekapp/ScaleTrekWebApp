@@ -60,6 +60,20 @@ CREATE INDEX IF NOT EXISTS idx_disputes_milestone_id ON public.disputes(mileston
 CREATE INDEX IF NOT EXISTS idx_migration_requests_user_id ON public.migration_requests(user_id);
 CREATE INDEX IF NOT EXISTS idx_migration_requests_status ON public.migration_requests(status);
 
+-- POST COMMENTS
+CREATE TABLE IF NOT EXISTS public.post_comments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  post_id UUID REFERENCES public.posts(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES public.profiles(id) NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE public.post_comments ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "comments_read" ON public.post_comments FOR SELECT USING (true);
+CREATE POLICY "comments_insert" ON public.post_comments FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "comments_delete" ON public.post_comments FOR DELETE USING (auth.uid() = user_id);
+CREATE INDEX IF NOT EXISTS idx_post_comments_post_id ON public.post_comments(post_id);
+
 -- Trigger: on migration approve, update profile type
 CREATE OR REPLACE FUNCTION handle_migration_approve()
 RETURNS TRIGGER AS $$

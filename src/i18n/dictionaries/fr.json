@@ -46,7 +46,7 @@
     "signInLink": "Se connecter",
     "orContinue": "ou continuer avec",
     "forgotPassword": "Mot de passe oublié ?",
-    "terms": "En continuant, vous acceptez les Conditions d'utilisation et la Politique de confidentialité de ScaleTrek."
+    "terms": "En continuant, vous acceptez les"
   },
   "feed": {
     "explore": "Explorer",
@@ -100,7 +100,22 @@
     "verified": "Vérifié",
     "joined": "Rejoint",
     "exportDossier": "Exporter le Dossier",
-    "dossierReady": "Dossier prêt pour le téléchargement"
+    "dossierReady": "Dossier prêt pour le téléchargement",
+    "edit": {
+      "title": "Modifier le profil",
+      "handle": "Pseudo",
+      "headline": "Titre",
+      "bio": "Bio",
+      "location": "Localisation",
+      "website": "Site web",
+      "company": "Entreprise",
+      "sector": "Secteur",
+      "save": "Enregistrer",
+      "saving": "Enregistrement...",
+      "saved": "Profil mis à jour"
+    },
+    "comments": "commentaires",
+    "postComment": "Publier"
   },
   "subscription": {
     "title": "ScaleTrek Pro",
@@ -281,6 +296,16 @@
     "underReview": "En cours d'examen",
     "flagged": "Étape signalée pour examen",
     "alreadyFlagged": "Cette étape est déjà en cours d'examen"
+  },
+  "legal": {
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "lastUpdated": "Dernière mise à jour",
+    "intro": "En utilisant ScaleTrek, vous acceptez ces conditions. ScaleTrek est une plateforme de mise en relation — nous ne gérons pas de fonds, n'exécutons pas de transactions et ne facilitons pas de transactions financières.",
+    "noLiability": "ScaleTrek fournit un service de mise en relation uniquement. Toutes les décisions d'investissement, vérifications préalables, contrats juridiques et transferts de capitaux se font entièrement hors plateforme. Nous ne sommes pas responsables des pertes financières, litiges ou résultats découlant des connexions établies via la plateforme.",
+    "userResponsibility": "Les utilisateurs sont responsables de la vérification de l'exactitude de leurs informations de profil, de la conduite d'une diligence raisonnable indépendante sur toute contrepartie et du respect des lois et réglementations marocaines applicables.",
+    "dataUsage": "Nous collectons les informations de profil, les données d'utilisation et les métadonnées de communication pour exploiter et améliorer la plateforme. Nous ne vendons pas de données personnelles. Les données sont stockées en toute sécurité sur l'infrastructure Supabase.",
+    "contact": "Pour toute question sur ces conditions, contactez support@scaletrek.app"
   },
   "migration": {
     "title": "Migration de Profil",
