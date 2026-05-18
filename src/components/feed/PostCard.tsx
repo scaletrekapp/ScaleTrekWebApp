@@ -70,8 +70,8 @@ export function PostCard({ post }: PostCardProps) {
       layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -2, transition: { duration: 0.2 } }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      whileHover={{ y: -1, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
     >
     <GlassCard variant="dark" className="overflow-hidden">
       {(post.mediaUrl || post.media?.[0]) && (
@@ -147,7 +147,7 @@ export function PostCard({ post }: PostCardProps) {
           onClick={handleLike}
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             post.liked
               ? "bg-violet/10 text-violet"
@@ -163,7 +163,7 @@ export function PostCard({ post }: PostCardProps) {
           onClick={handleSignal}
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
             post.signaled
               ? "bg-cyan/10 text-cyan"
@@ -179,7 +179,7 @@ export function PostCard({ post }: PostCardProps) {
           onClick={() => setShowComments(!showComments)}
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-muted hover:text-midnight dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-all"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -191,7 +191,7 @@ export function PostCard({ post }: PostCardProps) {
           onClick={() => setDisputeOpen(true)}
           whileTap={{ scale: 0.9 }}
           whileHover={{ scale: 1.05 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20 }}
           className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-muted hover:text-red-500 hover:bg-red-500/5 transition-all"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -207,7 +207,7 @@ export function PostCard({ post }: PostCardProps) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
             <CommentsSection postId={post.id} />
           </motion.div>

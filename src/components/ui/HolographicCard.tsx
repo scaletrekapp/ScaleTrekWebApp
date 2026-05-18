@@ -50,7 +50,7 @@ export function HolographicCard({ children, className = "", variant = "violet", 
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       animate={{ rotateX, rotateY }}
-      transition={{ type: "spring", stiffness: 150, damping: 15 }}
+      transition={{ type: "spring", stiffness: 60, damping: 20, mass: 1 }}
       className={`relative rounded-xl border overflow-hidden ${className}`}
       style={{
         borderColor: c.border,

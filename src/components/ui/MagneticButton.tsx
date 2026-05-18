@@ -47,9 +47,9 @@ export function MagneticButton({ children, variant = "primary", size = "md", loa
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       animate={{ x, y }}
-      transition={{ type: "spring", stiffness: 200, damping: 15, mass: 0.5 }}
+      transition={{ type: "spring", stiffness: 100, damping: 20, mass: 0.5 }}
       whileTap={{ scale: 0.95 }}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ scale: 1.01 }}
       className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
       disabled={loading || props.disabled}
       {...(props as any)}

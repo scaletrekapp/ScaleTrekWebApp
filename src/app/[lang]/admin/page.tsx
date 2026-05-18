@@ -586,7 +586,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
               <Skeleton className="w-40 h-4" />
             </div>
           </div>
-          <div className="grid grid-cols-6 gap-4 mb-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-28 rounded-2xl" />
             ))}
@@ -654,7 +654,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
-        className="max-w-7xl mx-auto px-6 py-8"
+className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
       >
         <motion.div variants={itemVariants} className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
@@ -725,7 +725,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
             hidden: {},
             visible: { transition: { staggerChildren: 0.05 } },
           }}
-          className="grid grid-cols-6 gap-4 mb-8"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8"
         >
           {statItems.map((s) => (
             <motion.div key={s.label} variants={kpiVariants}>
@@ -737,7 +737,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
           ))}
         </motion.div>
 
-        <motion.div variants={itemVariants} className="mb-6">
+        <motion.div variants={itemVariants} className="overflow-x-auto mb-6">
           <TabBar tabs={TABS} active={tab} onChange={(k) => setTab(k as AdminTab)} />
         </motion.div>
 
@@ -914,7 +914,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
             {tab === "user-matrix" && (
               <GlassCard variant="dark" className="overflow-hidden">
                 <div className="p-4 border-b border-slate-border">
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <div className="relative flex-1">
                       <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -935,8 +935,6 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                       <option value="all">All Roles</option>
                       <option value="dreamer">Dreamer</option>
                       <option value="investor">Investor</option>
-                      <option value="admin">Admin</option>
-                      <option value="super_admin">Super Admin</option>
                     </select>
                     <select
                       value={statusFilter}
@@ -966,7 +964,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                   </div>
                 </div>
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs">
+                  <table className="w-full min-w-[700px] text-xs">
                     <thead>
                       <tr className="border-b border-slate-border">
                         <th className="text-left py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Avatar / Handle</th>
@@ -1013,8 +1011,6 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                             >
                               <option value="dreamer">dreamer</option>
                               <option value="investor">investor</option>
-                              <option value="admin">admin</option>
-                              {u.role === "super_admin" && <option value="super_admin">super_admin</option>}
                             </select>
                           </td>
                           <td className="py-3 px-4">
@@ -1145,7 +1141,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                   const targetUser = users.find((u) => u.id === v.user_id);
                   return (
                     <GlassCard key={v.id} variant="dark" className="group hover:border-violet/20 transition-all duration-300">
-                      <div className="flex items-start justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div className="flex items-start gap-4">
                           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet/20 to-cyan/20 border border-slate-border flex items-center justify-center shrink-0">
                             <span className="text-sm font-bold text-violet font-mono">
@@ -1182,14 +1178,14 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 ml-4">
-                          <MagneticButton
-                            variant="primary"
-                            size="sm"
-                            onClick={() => handleVerifyRequest(v.id, v.user_id, true, scaleSelector[v.user_id] || "verified")}
-                          >
-                            Approve
-                          </MagneticButton>
+                          <div className="flex items-center gap-2 sm:ml-4">
+                            <MagneticButton
+                              variant="primary"
+                              size="sm"
+                              onClick={() => handleVerifyRequest(v.id, v.user_id, true, scaleSelector[v.user_id] || "verified")}
+                            >
+                              Approve
+                            </MagneticButton>
                           <MagneticButton
                             variant="danger"
                             size="sm"
@@ -1204,7 +1200,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                 })}
                 {verifications.filter((v) => v.status === "approved").slice(0, 3).map((v) => (
                   <GlassCard key={v.id} variant="dark" className="opacity-60 hover:opacity-100 transition-opacity">
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                       <div className="w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center">
                         <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -1216,7 +1212,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                           Approved {v.reviewed_at ? formatRelativeTime(v.reviewed_at) : ""}
                         </span>
                       </div>
-                      <div className="ml-auto"><Badge label="approved" color="#22C55E" size="sm" variant="outline" /></div>
+                      <div className="sm:ml-auto"><Badge label="approved" color="#22C55E" size="sm" variant="outline" /></div>
                     </div>
                   </GlassCard>
                 ))}
@@ -1262,7 +1258,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                     </div>
                     {underReviewDisputes.map((d) => (
                       <GlassCard key={d.id} variant="dark" className="mb-3 group hover:border-red-500/20 transition-all duration-300">
-                        <div className="flex items-start justify-between">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
                               <Badge label={d.status === "under_review" ? "IN REVIEW" : d.status} color="#F59E0B" size="sm" />
@@ -1290,7 +1286,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                               )}
                             </div>
                           </div>
-                          <div className="flex items-center gap-2 ml-4">
+                          <div className="flex items-center gap-2 sm:ml-4">
                             <MagneticButton variant="danger" size="sm" onClick={() => handleDisputeAction(d.id, "override")}>
                               Override
                             </MagneticButton>
@@ -1317,7 +1313,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                   </div>
                   {disputes.map((d) => (
                     <GlassCard key={d.id} variant="dark" className="mb-2 opacity-70 hover:opacity-100 transition-all duration-200">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
                           <div className={`w-2 h-2 rounded-full shrink-0 ${
                             d.status === "dismissed" ? "bg-green-500" :
@@ -1332,7 +1328,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                             <p className="text-[10px] text-slate-muted truncate">{d.reason}</p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 ml-4 shrink-0">
+                        <div className="flex items-center gap-2 sm:ml-4 shrink-0">
                           <Badge label={d.status} color={
                             d.status === "dismissed" ? "#22C55E" :
                             d.status === "overridden" ? "#EF4444" :
@@ -1481,7 +1477,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                     </svg>
                     <h3 className="text-sm font-bold text-white">Performance Monitor</h3>
                   </div>
-                  <div className="grid grid-cols-3 gap-4 mb-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
                     <div className="p-5 rounded-xl bg-white/[0.03] border border-slate-border text-center group hover:border-violet/20 transition-all">
                       <div className="text-2xl font-bold text-violet font-mono">—</div>
                       <div className="text-[10px] text-slate-muted uppercase tracking-widest mt-1">API Calls</div>
@@ -1542,7 +1538,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                   {activityFeed.map((event, idx) => (
                     <div
                       key={event.id}
-                      className="flex items-center gap-4 py-3 px-3 rounded-lg hover:bg-white/[0.02] transition-colors border-b border-slate-border last:border-0"
+                      className="flex flex-wrap items-center gap-2 sm:gap-4 py-3 px-3 rounded-lg hover:bg-white/[0.02] transition-colors border-b border-slate-border last:border-0"
                     >
                       <span className="text-[10px] text-slate-muted font-mono w-16 shrink-0 tabular-nums">
                         {formatRelativeTime(event.timestamp)}
@@ -1562,8 +1558,8 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                       <span className="text-xs text-white font-medium font-mono">
                         @{event.handle}
                       </span>
-                      <span className="text-xs text-slate-muted">{event.detail}</span>
-                      <span className="ml-auto text-[9px] text-slate-muted font-mono opacity-50">
+                      <span className="text-xs text-slate-muted min-w-0 break-words">{event.detail}</span>
+                      <span className="sm:ml-auto text-[9px] text-slate-muted font-mono opacity-50">
                         {event.id}
                       </span>
                     </div>

@@ -138,7 +138,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
       <motion.main
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="max-w-3xl mx-auto px-4 py-8 relative"
       >
         <ParticleField count={8} color="#8B5CF6" />
@@ -172,7 +172,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1, duration: 0.4 }}
+          transition={{ delay: 0.15, duration: 0.6 }}
         >
           <GlassCard variant="dark" className="mb-8 relative overflow-hidden group">
           <div className="absolute inset-0 bg-gradient-to-r from-violet/5 via-transparent to-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -228,7 +228,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
+          transition={{ delay: 0.3, duration: 0.6 }}
         >
           <div className="flex items-center justify-between mb-6">
             <FeedTabs />
@@ -251,7 +251,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
           <motion.div
             initial="hidden"
             animate="visible"
-            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
+            variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
             className="space-y-4"
           >
             <AnimatePresence mode="popLayout">
@@ -262,7 +262,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 >
                   <PostCard post={post} />
                 </motion.div>
