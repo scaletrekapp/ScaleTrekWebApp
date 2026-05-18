@@ -46,7 +46,7 @@ export function LanguageSelector() {
         <span className="uppercase">{currentLang}</span>
       </button>
       {open && (
-        <div className="absolute top-full mt-1 right-0 w-36 glass-dark dark:glass-dark border border-slate-border dark:border-slate-border rounded-xl overflow-hidden z-50 shadow-2xl">
+        <div className="absolute top-full mt-1 left-0 w-36 bg-white dark:bg-midnight2 border border-slate-border rounded-xl overflow-hidden z-[100] shadow-2xl" role="menu">
           {languages.map((lang) => (
             <button
               key={lang.code}

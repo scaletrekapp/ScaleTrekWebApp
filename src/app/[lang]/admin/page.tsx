@@ -1379,7 +1379,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                       checked={maintenanceFlag?.enabled || false}
                       onChange={() => maintenanceFlag && toggleFlag("maintenance_mode", maintenanceFlag.enabled)}
                     />
-                    <div className="w-10 h-5 rounded-full bg-slate-border peer-checked:bg-violet peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all after:shadow-lg" />
+                    <div className="w-10 h-5 rounded-full bg-slate-border peer-checked:bg-violet cursor-pointer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all after:shadow-lg" />
                   </label>
                 </div>
 
@@ -1440,7 +1440,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
                       checked={rateLimitingFlag?.enabled || false}
                       onChange={() => rateLimitingFlag && toggleFlag("rate_limiting", rateLimitingFlag.enabled)}
                     />
-                    <div className="w-10 h-5 rounded-full bg-slate-border peer-checked:bg-cyan peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all after:shadow-lg" />
+                    <div className="w-10 h-5 rounded-full bg-slate-border peer-checked:bg-cyan cursor-pointer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all after:shadow-lg" />
                   </label>
                 </div>
                 <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.03] border border-slate-border hover:border-violet/20 transition-all">
