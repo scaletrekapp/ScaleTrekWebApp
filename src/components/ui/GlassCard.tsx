@@ -17,10 +17,10 @@ export function GlassCard({
 }: GlassCardProps) {
   const base =
     variant === "dark"
-      ? "bg-[#0A0A0A] dark:bg-midnight2 border border-slate-border dark:border-slate-border"
+      ? "bg-white dark:bg-midnight2 border border-slate-border"
       : variant === "accent"
-        ? "bg-glass-bg dark:bg-glass-bg border"
-        : "bg-glass-bg dark:bg-glass-bg border border-glass-border dark:border-glass-border";
+        ? "bg-glass-bg border"
+        : "bg-glass-bg border border-glass-border";
 
   const accentStyle = variant === "accent" && accentColor
     ? { borderColor: accentColor }

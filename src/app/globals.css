@@ -16,6 +16,7 @@
     --surface-secondary: 249 250 251;
     --glass-bg: rgba(255, 255, 255, 0.6);
     --glass-border: rgba(0, 0, 0, 0.08);
+    --border: #E5E7EB;
   }
 
   .dark {
@@ -31,10 +32,7 @@
     --surface-secondary: 17 17 17;
     --glass-bg: rgba(26, 26, 26, 0.6);
     --glass-border: rgba(255, 255, 255, 0.08);
-  }
-
-  * {
-    @apply border-slate-border dark:border-slate-border;
+    --border: #2E2E2E;
   }
 
   html {
@@ -102,4 +100,8 @@
   html[dir="rtl"] .pe-2 { padding-left: 0.5rem; padding-right: 0; }
   html[dir="rtl"] .pe-3 { padding-left: 0.75rem; padding-right: 0; }
   html[dir="rtl"] .pe-4 { padding-left: 1rem; padding-right: 0; }
+}
+
+* {
+  border-color: var(--border, #E5E7EB);
 }

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
+import { Logo } from "@/components/ui/Logo";
 import { createClient } from "@/lib/supabase-client";
 import { useAuthStore } from "@/stores/useAuthStore";
 
@@ -93,12 +94,7 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
       <div className="hidden lg:flex flex-col justify-between p-12 bg-gradient-to-br from-midnight via-midnight2 to-midnight3 border-r border-slate-border">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet to-cyan flex items-center justify-center shadow-lg shadow-violet/20">
-            <span className="text-white font-bold text-lg">ST</span>
-          </div>
-          <span className="font-bold text-white text-lg">ScaleTrek</span>
-        </div>
+        <Logo size={36} className="[&_span]:text-white" />
         <div className="max-w-md">
           <h1 className="text-4xl font-bold text-white mb-4 leading-tight">
             {t("manifesto.title")}
@@ -126,12 +122,7 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
       <div className="flex items-center justify-center p-8 bg-white dark:bg-midnight">
         <div className="w-full max-w-sm">
           <div className="lg:hidden flex items-center justify-between mb-8">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet to-cyan flex items-center justify-center">
-                <span className="text-white font-bold text-xs">ST</span>
-              </div>
-              <span className="font-bold text-sm text-midnight dark:text-white">ScaleTrek</span>
-            </div>
+            <Logo size={28} />
             <div className="flex items-center gap-2">
               <LanguageSelector />
               <ThemeToggle />

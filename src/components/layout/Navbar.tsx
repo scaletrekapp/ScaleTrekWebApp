@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { NotificationBell } from "@/components/ui/NotificationBell";
+import { Logo } from "@/components/ui/Logo";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { createClient } from "@/lib/supabase-client";
@@ -43,11 +44,8 @@ export function Navbar({ lang }: { lang: string }) {
   return (
     <header className="sticky top-0 z-40 border-b border-slate-border dark:border-slate-border bg-white/80 dark:bg-midnight/80 backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link href={`/${lang}/feed`} className="flex items-center gap-2 shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet to-cyan flex items-center justify-center">
-            <span className="text-white font-bold text-xs">ST</span>
-          </div>
-          <span className="font-bold text-sm hidden sm:block text-midnight dark:text-white">ScaleTrek</span>
+        <Link href={`/${lang}/feed`} className="shrink-0">
+          <Logo size={28} />
         </Link>
 
         <nav className="hidden md:flex items-center gap-1">

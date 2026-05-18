@@ -12,7 +12,7 @@ module.exports = {
         midnight3: "#111111",
         "slate-base": "#1A1A1A",
         "slate-light": "#2A2A2A",
-        "slate-border": "#2E2E2E",
+        "slate-border": "var(--border)",
         "slate-muted": "#6B7280",
         "slate-subtle": "#404040",
         violet: { DEFAULT: "#8B5CF6", light: "#A78BFA", dark: "#7C3AED" },
@@ -33,6 +33,7 @@ module.exports = {
         sans: ["Inter", "system-ui", ...fontFamily.sans],
         mono: ["JetBrains Mono", "Fira Code", ...fontFamily.mono],
         arabic: ["IBM Plex Sans Arabic", "system-ui", ...fontFamily.sans],
+        logo: ["Space Grotesk", "system-ui", ...fontFamily.sans],
       },
       animation: {
         "pulse-dot": "pulse-dot 2s ease-in-out infinite",
