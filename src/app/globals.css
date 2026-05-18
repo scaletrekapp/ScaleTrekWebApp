@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 5 5 5;
+    --accent: 139 92 246;
+    --accent-light: 167 139 251;
+    --cyan: 6 182 212;
+    --cyan-light: 34 211 238;
+    --muted: 156 163 175;
+    --border: 229 231 235;
+    --surface: 255 255 255;
+    --surface-secondary: 249 250 251;
+    --glass-bg: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(0, 0, 0, 0.08);
+  }
+
+  .dark {
+    --background: 5 5 5;
+    --foreground: 255 255 255;
+    --accent: 139 92 246;
+    --accent-light: 167 139 251;
+    --cyan: 6 182 212;
+    --cyan-light: 34 211 238;
+    --muted: 107 114 128;
+    --border: 46 46 46;
+    --surface: 26 26 26;
+    --surface-secondary: 17 17 17;
+    --glass-bg: rgba(26, 26, 26, 0.6);
+    --glass-border: rgba(255, 255, 255, 0.08);
+  }
+
+  * {
+    @apply border-slate-border dark:border-slate-border;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-white dark:bg-midnight text-midnight dark:text-white;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  html[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+
+  html[dir="rtl"] .space-x-reverse {
+    --tw-space-x-reverse: 1;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-glass-bg border border-glass-border backdrop-blur-xl;
+  }
+
+  .glass-dark {
+    @apply bg-midnight2 border border-slate-border;
+  }
+
+  .gradient-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-violet to-cyan;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
