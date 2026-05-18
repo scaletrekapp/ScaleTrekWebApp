@@ -230,13 +230,13 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
               disabled={loading}
               className="w-full py-2.5 rounded-xl bg-gradient-to-r from-violet to-violet-dark text-white font-semibold text-sm hover:brightness-110 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "..." : (mode === "signin" ? t("auth.signIn") : t("auth.signUp"))}
+              {loading ? t("common.loading") : (mode === "signin" ? t("auth.signIn") : t("auth.signUp"))}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-xs text-slate-muted">
-              By continuing, you agree to ScaleTrek&apos;s Terms of Service and Privacy Policy.
+              {t("auth.terms")}
             </p>
           </div>
         </div>

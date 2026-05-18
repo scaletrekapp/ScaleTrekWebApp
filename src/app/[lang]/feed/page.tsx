@@ -105,17 +105,17 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
               <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
               </svg>
-              <span className="text-sm font-semibold text-midnight dark:text-white">Control Room</span>
+              <span className="text-sm font-semibold text-midnight dark:text-white">{t("feed.controlRoom")}</span>
             </div>
             <span className="text-xs text-slate-muted">
-              {sorted.length} matching
+              {sorted.length} {t("feed.matching")}
             </span>
           </div>
 
           <div className="space-y-3">
             <div className="flex items-center justify-between text-xs text-slate-muted">
-              <span>High Risk · Dreamers</span>
-              <span>Low Risk · Reality</span>
+              <span>{t("feed.highRiskDreamers")}</span>
+              <span>{t("feed.lowRiskReality")}</span>
             </div>
             <input
               type="range"
@@ -129,8 +129,8 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
               }}
             />
             <div className="flex items-center justify-between text-xs font-semibold">
-              <span className="text-violet">Blueprint</span>
-              <span className="text-cyan">Steel</span>
+              <span className="text-violet">{t("feed.blueprint")}</span>
+              <span className="text-cyan">{t("feed.steel")}</span>
             </div>
           </div>
         </GlassCard>

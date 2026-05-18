@@ -1,0 +1,296 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Algo salió mal",
+    "retry": "Reintentar",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "search": "Buscar",
+    "noResults": "Sin resultados",
+    "viewAll": "Ver todo",
+    "comingSoon": "Próximamente",
+    "learnMore": "Más información",
+    "back": "Volver",
+    "noHeadline": "Sin titular",
+    "noInfo": "Sin información aún",
+    "exploreNetwork": "Explorar la red"
+  },
+  "nav": {
+    "feed": "Feed",
+    "create": "Crear",
+    "signal": "Señal",
+    "profile": "Perfil",
+    "settings": "Ajustes",
+    "manifesto": "Manifiesto",
+    "subscription": "Suscripción",
+    "admin": "Admin",
+    "signOut": "Cerrar sesión",
+    "signIn": "Iniciar sesión",
+    "register": "Registrarse",
+    "logIn": "Acceder"
+  },
+  "auth": {
+    "welcomeBack": "Bienvenido de nuevo",
+    "joinNetwork": "Únete a la red",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "name": "Nombre completo",
+    "username": "Nombre de usuario",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "signUpLink": "Regístrate",
+    "signInLink": "Inicia sesión",
+    "orContinue": "o continúa con",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "terms": "Al continuar, aceptas los Términos de Servicio y la Política de Privacidad de ScaleTrek."
+  },
+  "feed": {
+    "explore": "Explorar",
+    "dreamer": "Planos de Soñadores",
+    "reality": "Controles de Realidad",
+    "recent": "Reciente",
+    "top": "Mejores",
+    "empty": "Aún no hay publicaciones. ¡Sé el primero en compartir!",
+    "hint": "Desliza para ajustar tu feed",
+    "momentum": "Momento",
+    "likes": "me gusta",
+    "comments": "comentarios",
+    "signals": "señales",
+    "posts": "Publicaciones",
+    "controlRoom": "Sala de Control",
+    "matching": "coincidencias",
+    "highRiskDreamers": "Alto Riesgo · Soñadores",
+    "lowRiskReality": "Bajo Riesgo · Realidad",
+    "blueprint": "Plano",
+    "steel": "Acero"
+  },
+  "post": {
+    "like": "Me gusta",
+    "signal": "Señalar",
+    "comment": "Comentar",
+    "dreamerBlueprint": "Plano de Soñador",
+    "realityCheck": "Verificación de Realidad",
+    "platinum": "Platino",
+    "gold": "Oro",
+    "flag": "Reportar"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "appearance": "Apariencia",
+    "theme": "Tema",
+    "dark": "Oscuro",
+    "light": "Claro",
+    "language": "Idioma",
+    "about": "Acerca de",
+    "version": "Versión"
+  },
+  "profile": {
+    "title": "Perfil",
+    "editProfile": "Editar perfil",
+    "showcases": "Proyectos",
+    "momentum": "Momento",
+    "realityScore": "Puntuación de Realidad",
+    "dreamer": "Soñador",
+    "investor": "Inversor",
+    "admin": "Admin",
+    "verified": "Verificado",
+    "joined": "Se unió",
+    "exportDossier": "Exportar Dossier",
+    "dossierReady": "Dossier listo para descargar"
+  },
+  "subscription": {
+    "title": "ScaleTrek Pro",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "pro": "Pro",
+    "free": "Gratis",
+    "subscribe": "Suscribirse",
+    "manage": "Gestionar suscripción",
+    "comingSoon": "Las suscripciones premium llegarán pronto a Marruecos. Registra tu interés y te avisaremos.",
+    "registerInterest": "Registrar interés",
+    "registered": "¡Estás en la lista!",
+    "goPro": "Hacerse Pro",
+    "youArePro": "Eres Pro",
+    "perksTitle": "Ventajas Pro",
+    "perks": {
+      "video": "Subir vídeo",
+      "media": "Hasta 6 medios por publicación",
+      "badge": "Insignia Pro en tu perfil",
+      "analytics": "Analíticas avanzadas"
+    }
+  },
+  "create": {
+    "title": "Nuevo Proyecto",
+    "post": "Publicar en el feed",
+    "posting": "Publicando...",
+    "milestone": "Hito",
+    "selectMilestone": "Seleccionar hito",
+    "addMedia": "Añadir multimedia",
+    "mediaHint": "Toca para subir desde la galería",
+    "description": "Descripción",
+    "descriptionPlaceholder": "Describe tu hito..."
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "subtitle": "Ponderación del feed, verificación, gestión de usuarios",
+    "accessDenied": "Acceso Denegado",
+    "accessDeniedMsg": "Se requieren privilegios de administrador.",
+    "tabs": {
+      "dashboard": "Panel",
+      "users": "Usuarios",
+      "reports": "Reportes",
+      "verification": "Verificación",
+      "flags": "Funciones",
+      "content": "Contenido",
+      "system": "Sistema",
+      "performance": "Rendimiento"
+    },
+    "stats": {
+      "totalUsers": "Usuarios totales",
+      "active": "Activos",
+      "suspended": "Suspendidos",
+      "pendingReports": "Reportes pendientes",
+      "verifications": "Verificaciones"
+    },
+    "overview": {
+      "title": "Resumen del sistema",
+      "dreamersInvestors": "Soñadores / Inversores",
+      "verifiedUsers": "Usuarios verificados",
+      "resolutionRate": "Tasa de resolución"
+    },
+    "activity": {
+      "title": "Actividad reciente",
+      "none": "Sin actividad reciente."
+    },
+    "users": {
+      "tableHeader": {
+        "handle": "Usuario",
+        "email": "Email",
+        "role": "Rol",
+        "status": "Estado",
+        "verified": "Verificado",
+        "momentum": "Momento",
+        "actions": "Acciones"
+      },
+      "edit": "Editar",
+      "suspend": "Suspender",
+      "restore": "Restaurar",
+      "ban": "Bloquear",
+      "shadowBan": "Shadow Ban",
+      "removeShadowBan": "Quitar Shadow Ban",
+      "modifyRole": "Modificar rol"
+    },
+    "reports": {
+      "none": "No hay reportes para revisar.",
+      "dismiss": "Desestimar",
+      "action": "Actuar",
+      "noRecent": "Sin actividad reciente."
+    },
+    "verification": {
+      "document": "Documento",
+      "submitted": "Enviado",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "basic": "Básico",
+      "verified": "Verificado",
+      "elite": "Élite"
+    },
+    "flags": {
+      "noFlags": "No hay funciones configuradas."
+    },
+    "content": {
+      "title": "Contenido y Disputas",
+      "noDisputes": "No hay hitos disputados.",
+      "override": "Anular",
+      "deleteFraud": "Eliminar (fraude)",
+      "editMetrics": "Editar métricas"
+    },
+    "system": {
+      "title": "Panel de Infraestructura",
+      "maintenanceMode": "Modo Mantenimiento",
+      "maintenanceHint": "Redirige a los usuarios a una página de solo lectura",
+      "systemBroadcast": "Transmisión del sistema",
+      "broadcastPlaceholder": "Escribe un mensaje de transmisión...",
+      "send": "Enviar",
+      "performance": "Monitor de rendimiento",
+      "apiCalls": "Llamadas API",
+      "errorRate": "Tasa de error",
+      "rateLimiting": "Límite de tasa",
+      "rateLimitingHint": "Bloquear automáticamente IPs maliciosas"
+    }
+  },
+  "manifesto": {
+    "title": "Cuando el Plano Encuentra el Acero",
+    "subtitle": "Una red de descubrimiento soberana para el ecosistema de innovación marroquí",
+    "sections": [
+      {
+        "heading": "La Visión",
+        "body": "ScaleTrek no es una red social. Es un puente de descubrimiento soberano — una matriz de emparejamiento élite y ligera diseñada para reconectar el ecosistema emprendedor marroquí con su verdadero potencial. Existimos para resolver un problema fundamental: la brecha de confianza entre quienes construyen y quienes financian."
+      },
+      {
+        "heading": "El Plano y el Acero",
+        "body": "Toda gran estructura requiere tanto un plano como acero. La corriente de Soñadores honra a los arquitectos visionarios — aquellos que dibujan los planos de industrias que aún no existen. La corriente de Realidad celebra a los constructores — restaurantes, operadores logísticos y fabricantes que ya han hundido el acero en la tierra y necesitan capital para crecer. ScaleTrek otorga igual reverencia a ambos. Uno no puede existir sin el otro."
+      },
+      {
+        "heading": "El Conmutador, No el Banco",
+        "body": "No manejamos dinero. No tocamos el depósito en garantía. No tomamos un porcentaje de tu trato. ScaleTrek es un motor de emparejamiento puro: sacamos a la luz oportunidades de alta señal, verificamos los datos y nos apartamos. El contrato legal, la transferencia de capital y la reunión notarial ocurren completamente fuera de línea. Esto nos aísla de la pesada regulación financiera mientras mantenemos el enfoque donde debe estar: en la calidad de la conexión."
+      },
+      {
+        "heading": "Confianza, Programáticamente",
+        "body": "En ScaleTrek, la confianza no se declara — se demuestra. Nuestro Motor de Momento rastrea la consistencia de ejecución, el cumplimiento de hitos y la frecuencia de actualizaciones. Cada perfil lleva una puntuación viva que decae naturalmente con la inactividad. No hay me gusta, no hay seguidores, no hay métricas de vanidad. Solo señal."
+      },
+      {
+        "heading": "Marruecos Primero",
+        "body": "Estamos construidos para Marruecos, por un equipo que entiende sus contornos. Desde los comerciantes del zoco de Marrakech hasta los laboratorios de deep-tech de Technopark, ScaleTrek está diseñado para descubrir oportunidades en todo el espectro de la economía nacional. El árabe y el francés son ciudadanos de primera clase. La arquitectura respeta las realidades regulatorias locales. La ambición es global, pero la base es inequívocamente marroquí."
+      }
+    ]
+  },
+  "notification": {
+    "title": "Notificaciones",
+    "empty": "Sin notificaciones",
+    "like": "le gustó tu publicación",
+    "signal": "señaló tu hito",
+    "connect": "quiere conectar",
+    "invest": "está interesado en invertir",
+    "milestone": "alcanzó un nuevo hito",
+    "verify": "ha sido verificado",
+    "message": "te envió un mensaje",
+    "markRead": "Marcar como leído",
+    "markAllRead": "Marcar todo como leído"
+  },
+  "dossier": {
+    "title": "Dossier de Inversión",
+    "generated": "Generado",
+    "profile": "Resumen del perfil",
+    "metrics": "Métricas clave",
+    "momentumScore": "Puntuación de Momento",
+    "realityScore": "Puntuación de Realidad",
+    "milestones": "Cronología de hitos",
+    "noMilestones": "No hay hitos registrados",
+    "download": "Descargar PDF",
+    "print": "Imprimir"
+  },
+  "dispute": {
+    "flagMilestone": "Reportar / Disputar hito",
+    "reasonPlaceholder": "Describe el problema con este hito...",
+    "submit": "Enviar disputa",
+    "underReview": "En revisión",
+    "flagged": "Hito reportado para revisión",
+    "alreadyFlagged": "Este hito ya está en revisión"
+  },
+  "migration": {
+    "title": "Migración de Perfil",
+    "currentType": "Tipo de perfil actual",
+    "targetType": "Tipo de perfil objetivo",
+    "dreamerToReality": "Migrar Soñador → Realidad",
+    "preserveHistory": "Tu historial completo se conservará",
+    "apply": "Solicitar migración",
+    "pending": "Solicitud pendiente de revisión",
+    "approved": "Migración aprobada",
+    "rejected": "Migración rechazada"
+  }
+}

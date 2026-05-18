@@ -14,7 +14,7 @@ export default function ManifestoPage({ params: { lang } }: { params: { lang: st
       <main className="max-w-3xl mx-auto px-4 py-16 sm:py-24">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet/10 dark:bg-violet/10 text-violet dark:text-violet text-xs font-semibold tracking-wide uppercase mb-6">
-            Manifesto
+            {t("nav.manifesto")}
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold text-midnight dark:text-white mb-4 tracking-tight leading-tight">
             {t("manifesto.title")}
@@ -51,7 +51,7 @@ export default function ManifestoPage({ params: { lang } }: { params: { lang: st
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
-            Explore the Network
+            {t("common.exploreNetwork")}
           </Link>
         </div>
       </main>

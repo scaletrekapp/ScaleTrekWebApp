@@ -43,7 +43,22 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
     <div className="min-h-screen bg-white dark:bg-midnight">
       <Navbar lang={lang} />
       <main className="max-w-3xl mx-auto px-4 py-8">
-        {!profile ? (
+          <div className="flex items-center justify-end gap-2 mb-4 print:hidden">
+            <a href={`/${lang}/migration`} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold text-slate-muted hover:text-midnight dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+              </svg>
+              {t("migration.title")}
+            </a>
+            <a href={`/${lang}/dossier`} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-semibold text-violet hover:bg-violet/10 transition-colors">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+              </svg>
+              {t("profile.exportDossier")}
+            </a>
+          </div>
+
+          {!profile ? (
           <div className="flex justify-center py-20">
             <div className="w-8 h-8 border-2 border-violet border-t-transparent rounded-full animate-spin" />
           </div>
@@ -66,7 +81,7 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
                     </svg>
                   )}
                 </div>
-                <p className="text-sm text-slate-muted">{profile.headline || "No headline set"}</p>
+                <p className="text-sm text-slate-muted">{profile.headline || t("common.noHeadline")}</p>
                 <div className="flex items-center gap-3 mt-1.5">
                   <Badge label={profile.role} color="#8B5CF6" size="sm" variant="outline" />
                   <MomentumPill score={profile.momentumScore} size="sm" />
@@ -106,7 +121,7 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
                     </div>
                   )}
                   {!profile.location && !profile.companyName && !profile.website && (
-                    <p className="text-slate-muted text-sm py-4 text-center">No info added yet</p>
+                    <p className="text-slate-muted text-sm py-4 text-center">{t("common.noInfo")}</p>
                   )}
                 </div>
               </GlassCard>

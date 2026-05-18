@@ -48,7 +48,7 @@ export default function SubscriptionPage({ params: { lang } }: { params: { lang:
             {t("subscription.title")}
           </div>
           <h1 className="text-3xl font-extrabold text-midnight dark:text-white mb-2">
-            {isPro ? "You're a Pro" : "Go Pro"}
+            {isPro ? t("subscription.youArePro") : t("subscription.goPro")}
           </h1>
           <p className="text-slate-muted text-sm max-w-md mx-auto">
             {t("subscription.comingSoon")}
@@ -58,7 +58,7 @@ export default function SubscriptionPage({ params: { lang } }: { params: { lang:
         <GlassCard variant="dark" className="mb-6 text-center">
           <div className="py-4">
             <Badge
-              label={isPro ? "Pro" : "Free"}
+              label={isPro ? t("subscription.pro") : t("subscription.free")}
               color={isPro ? "#8B5CF6" : "#6B7280"}
               variant={isPro ? "glow" : "outline"}
               size="md"
@@ -81,7 +81,7 @@ export default function SubscriptionPage({ params: { lang } }: { params: { lang:
 
         <GlassCard variant="dark">
           <h2 className="text-xs font-semibold text-slate-muted uppercase tracking-wider mb-4">
-            {t("subscription.perks.title")}
+            {t("subscription.perksTitle")}
           </h2>
           <div className="grid sm:grid-cols-2 gap-3">
             {[

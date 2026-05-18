@@ -3,8 +3,11 @@ export interface User {
   handle: string;
   avatar?: string;
   coverUrl?: string;
-  role: "dreamer" | "investor" | "admin";
+  role: "dreamer" | "investor" | "admin" | "super_admin";
   verified: boolean;
+  verifiedScale?: "none" | "basic" | "verified" | "elite";
+  isShadowed?: boolean;
+  isBanned?: boolean;
   realityScore: number;
   momentumScore: number;
   joinedAt: string;
@@ -39,6 +42,8 @@ export interface ShowcasePost {
   liked?: boolean;
   signaled?: boolean;
   media?: PostMedia[];
+  disputeStatus?: "none" | "flagged" | "under_review" | "resolved";
+  disputeReason?: string;
 }
 
 export interface PostMedia {
@@ -47,6 +52,18 @@ export interface PostMedia {
   url: string;
   type: "image" | "video";
   order: number;
+}
+
+export interface Milestone {
+  id: string;
+  userId: string;
+  title: string;
+  description: string;
+  date: string;
+  type: "dreamer" | "reality";
+  status: "completed" | "flagged" | "under_review" | "resolved";
+  disputeReason?: string;
+  createdAt: string;
 }
 
 export interface InvestorProfile {
@@ -93,7 +110,7 @@ export type DealStage = "exploring" | "negotiating" | "committed" | "closed";
 
 export interface AppNotification {
   id: string;
-  type: "like" | "connect" | "invest" | "milestone" | "verify" | "message";
+  type: "like" | "connect" | "invest" | "milestone" | "verify" | "message" | "dispute" | "broadcast";
   title: string;
   body: string;
   fromHandle: string;
@@ -101,7 +118,13 @@ export interface AppNotification {
   read: boolean;
   createdAt: Date | string;
   postId?: string;
+  link?: string;
 }
 
 export type FeedMode = "dreamer" | "reality" | "explore";
 export type SortMode = "recent" | "top";
+
+export interface SystemConfig {
+  maintenanceMode: boolean;
+  rateLimitingEnabled: boolean;
+}
