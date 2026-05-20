@@ -38,7 +38,7 @@ export default function CreatePage({ params: { lang } }: { params: { lang: strin
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
       <Navbar lang={lang} />
-      <main className="max-w-2xl mx-auto px-4 py-8">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <h1 className="text-2xl font-bold text-midnight dark:text-white mb-8">{t("create.title")}</h1>
 
         <form onSubmit={handleSubmit} className="space-y-6">

@@ -46,7 +46,7 @@ export function Logo({ size = 32, showText = true, className = "" }: LogoProps) 
       </svg>
 
       {showText && (
-        <span className="font-logo text-sm sm:text-base text-midnight dark:text-white tracking-tight font-bold">
+        <span className="font-logo text-sm sm:text-base text-white tracking-tight font-bold">
           ScaleTrek
         </span>
       )}

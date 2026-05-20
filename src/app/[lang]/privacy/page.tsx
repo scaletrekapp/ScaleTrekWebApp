@@ -10,7 +10,7 @@ export default function PrivacyPage({ params: { lang } }: { params: { lang: stri
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
       <Navbar lang={lang} />
-      <main className="max-w-3xl mx-auto px-4 py-12 sm:py-20">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
         <h1 className="text-3xl font-bold text-midnight dark:text-white mb-2">{t("legal.privacy")}</h1>
         <p className="text-sm text-slate-muted mb-10">{t("legal.lastUpdated")}: May 2026</p>
         <div className="space-y-6 text-sm text-slate-muted leading-relaxed">

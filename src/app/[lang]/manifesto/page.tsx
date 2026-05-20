@@ -11,7 +11,7 @@ export default function ManifestoPage({ params: { lang } }: { params: { lang: st
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
       <Navbar lang={lang} />
-      <main className="max-w-3xl mx-auto px-4 py-16 sm:py-24">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet/10 dark:bg-violet/10 text-violet dark:text-violet text-xs font-semibold tracking-wide uppercase mb-6">
             {t("nav.manifesto")}

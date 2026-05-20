@@ -86,7 +86,7 @@ export default function InvestorApplyPage({ params: { lang } }: { params: { lang
     return (
       <div className="min-h-screen bg-graphite">
         <Navbar lang={lang} />
-        <main className="max-w-lg mx-auto px-4 py-20 text-center">
+        <main className="max-w-xl mx-auto px-4 sm:px-6 py-20 text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -117,7 +117,7 @@ export default function InvestorApplyPage({ params: { lang } }: { params: { lang
   return (
     <div className="min-h-screen bg-graphite">
       <Navbar lang={lang} />
-      <main className="max-w-lg mx-auto px-4 py-12">
+        <main className="max-w-xl mx-auto px-4 sm:px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

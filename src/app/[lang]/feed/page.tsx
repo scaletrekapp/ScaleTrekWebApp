@@ -138,7 +138,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="max-w-3xl mx-auto px-4 py-8 relative"
+        className="max-w-5xl mx-auto px-4 sm:px-6 py-8 relative"
       >
         <ParticleField count={8} color="#8B5CF6" />
 

@@ -42,7 +42,7 @@ export default function SubscriptionPage({ params: { lang } }: { params: { lang:
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
       <Navbar lang={lang} />
-      <main className="max-w-2xl mx-auto px-4 py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet/10 text-violet text-xs font-semibold tracking-wide uppercase mb-4">
             {t("subscription.title")}

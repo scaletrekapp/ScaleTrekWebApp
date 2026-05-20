@@ -55,7 +55,7 @@ export default function EditProfilePage({ params: { lang } }: { params: { lang: 
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
       <Navbar lang={lang} />
-      <main className="max-w-2xl mx-auto px-4 py-8">
+        <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-2xl font-bold text-midnight dark:text-white">{t("profile.edit.title")}</h1>
           {saved && <span className="text-xs text-green-500 font-semibold">{t("profile.edit.saved")}</span>}
