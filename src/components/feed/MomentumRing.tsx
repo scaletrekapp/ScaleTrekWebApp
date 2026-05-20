@@ -78,14 +78,23 @@ export function MomentumRing({ score, size = "md", onClick }: MomentumRingProps)
         </motion.span>
       </div>
 
-      {/* Glow ring */}
+      {/* Glow ring — uses SVG filter for circular drop-shadow */}
       {score >= 65 && (
-        <div
-          className="absolute inset-0 rounded-full opacity-30 animate-pulse-slow"
-          style={{
-            boxShadow: `0 0 ${size === "lg" ? "24px" : "16px"} ${match.color}`,
-          }}
-        />
+        <svg
+          className="absolute inset-0 pointer-events-none"
+          width={dimensions}
+          height={dimensions}
+          style={{ filter: `drop-shadow(0 0 ${size === "lg" ? "12px" : "8px"} ${match.color})` }}
+        >
+          <circle
+            cx={dimensions / 2}
+            cy={dimensions / 2}
+            r={radius}
+            fill={match.color}
+            opacity={0.25}
+            className="animate-pulse-slow"
+          />
+        </svg>
       )}
     </motion.button>
   );

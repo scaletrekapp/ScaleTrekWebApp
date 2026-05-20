@@ -15,7 +15,7 @@ export function ThemeToggle({ collapsed }: { collapsed?: boolean }) {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors text-slate-muted hover:text-white hover:bg-white/5 ${collapsed ? "" : ""}`}
+      className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors text-slate-muted hover:text-white hover:bg-white/5 ${collapsed ? "" : ""}`}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
     >
       <AnimatePresence mode="wait">
