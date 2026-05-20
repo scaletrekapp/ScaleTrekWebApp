@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { MomentumRing } from "./MomentumRing";
 import { MomentumDrawer } from "./MomentumDrawer";
 import { DeltaPill } from "./DeltaPill";
+import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
 
 interface FounderCardProps {
   id: string;
@@ -13,6 +14,7 @@ interface FounderCardProps {
   headline: string;
   avatar?: string;
   momentumScore: number;
+  verifiedScale?: "none" | "basic" | "verified" | "elite";
   revenueDelta?: string;
   userDelta?: string;
   tractionDelta?: string;
@@ -24,7 +26,7 @@ interface FounderCardProps {
 }
 
 export function FounderCard({
-  name, handle, headline, avatar, momentumScore, revenueDelta, userDelta, tractionDelta,
+  name, handle, headline, avatar, momentumScore, verifiedScale, revenueDelta, userDelta, tractionDelta,
   sparklineData, tags, type, onInvest, onMessage,
 }: FounderCardProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -59,6 +61,7 @@ export function FounderCard({
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="text-subhead truncate" style={{ color: "var(--text-primary)" }}>{name}</h3>
+                  <VerifiedBadge scale={verifiedScale} size="sm" />
                   <span className="text-caption" style={{ color: "var(--text-muted)" }}>@{handle}</span>
                   <span className={`text-micro px-1.5 py-0.5 rounded font-semibold uppercase ${
                     type === "reality" ? "bg-emerald-muted text-emerald" : "bg-violet-muted text-violet-light"

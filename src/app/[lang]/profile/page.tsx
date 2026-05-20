@@ -8,6 +8,7 @@ import { MomentumPill } from "@/components/ui/MomentumPill";
 import { LiveIndicator } from "@/components/ui/LiveIndicator";
 import { SkeletonCard } from "@/components/ui/SkeletonCard";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
+import { VerifiedBadge } from "@/components/ui/VerifiedBadge";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { createClient } from "@/lib/supabase-client";
 import type { User } from "@/types";
@@ -194,14 +195,13 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
                   <div className="flex items-center gap-3 flex-wrap">
                     <h1 className="text-heading" style={{ color: "var(--text-primary)" }}>{profile.handle}</h1>
                     {profile.verified && (
-                      <motion.svg
+                      <motion.div
                         initial={{ rotate: -20, scale: 0 }}
                         animate={{ rotate: 0, scale: 1 }}
                         transition={{ type: "spring", stiffness: 200, damping: 12 }}
-                        className="w-5 h-5 shrink-0" style={{ color: "var(--cyan)" }} fill="currentColor" viewBox="0 0 24 24"
                       >
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                      </motion.svg>
+                        <VerifiedBadge scale={profile.verifiedScale || "verified"} size="md" />
+                      </motion.div>
                     )}
                     {profile.isPro && (
                       <span className="text-micro px-2 py-0.5 rounded-full font-semibold border" style={{

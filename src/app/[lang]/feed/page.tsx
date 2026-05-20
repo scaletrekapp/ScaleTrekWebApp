@@ -81,6 +81,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
               avatar: p.user.avatar_url,
               role: p.user.role,
               verified: p.user.verified,
+      verifiedScale: p.user.verifiedScale,
               realityScore: p.user.reality_score,
               momentumScore: p.user.momentum_score,
               joinedAt: p.user.created_at,
@@ -139,12 +140,13 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
       headline: p.user.headline || "Founder",
       avatar: p.user.avatar,
       momentumScore: p.user.momentumScore,
+      verifiedScale: p.user.verifiedScale,
       type: (p.type === "dreamer" ? "dreamer" : "reality") as "dreamer" | "reality",
     }])).values()
   );
 
   return (
-    <div className="min-h-screen bg-onyx-900">
+    <div style={{ minHeight: "100vh", backgroundColor: "var(--bg-primary)" }}>
       <SocialTicker />
       <motion.main
         initial={{ opacity: 0, y: 20 }}
@@ -240,6 +242,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
                     headline={founder.headline}
                     avatar={founder.avatar}
                     momentumScore={founder.momentumScore}
+                    verifiedScale={founder.verifiedScale}
                     revenueDelta="+32%"
                     userDelta="+18%"
                     tractionDelta="+24%"
