@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { Logo } from "@/components/ui/Logo";
 import { GlowButton } from "@/components/ui/GlowButton";
@@ -227,7 +227,6 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
           <Logo size={32} className="[&_span]:text-white" />
           <div className="flex items-center gap-2">
             <LanguageSelector />
-            <ThemeToggle />
           </div>
         </div>
       </nav>

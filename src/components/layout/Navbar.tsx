@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+
 import { LanguageSelector } from "@/components/ui/LanguageSelector";
 import { NotificationBell } from "@/components/ui/NotificationBell";
 import { Logo } from "@/components/ui/Logo";
@@ -73,7 +73,6 @@ export function Navbar({ lang }: { lang: string }) {
 
         <div className="flex items-center gap-1">
           <LanguageSelector />
-          <ThemeToggle />
           {user && <NotificationBell lang={lang} />}
 
           {isLoading ? (
