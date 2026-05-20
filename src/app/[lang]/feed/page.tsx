@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { FeedTabs, SortPills, PostCard } from "@/components/feed";
+import { FeedTabs, SortPills, FounderCard } from "@/components/feed";
 import { SocialTicker } from "@/components/ui/SocialTicker";
 import { LiveIndicator } from "@/components/ui/LiveIndicator";
 import { SkeletonCard } from "@/components/ui/SkeletonCard";
@@ -130,8 +130,21 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
+  // Unique founders from posts
+  const founders = Array.from(
+    new Map(sorted.map((p) => [p.user.id, {
+      id: p.user.id,
+      name: p.user.handle,
+      handle: p.user.handle,
+      headline: p.user.headline || "Founder",
+      avatar: p.user.avatar,
+      momentumScore: p.user.momentumScore,
+      type: (p.type === "dreamer" ? "dreamer" : "reality") as "dreamer" | "reality",
+    }])).values()
+  );
+
   return (
-    <div className="min-h-screen bg-graphite">
+    <div className="min-h-screen bg-onyx-900">
       <SocialTicker />
       <motion.main
         initial={{ opacity: 0, y: 20 }}
@@ -148,9 +161,9 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
               <motion.span
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="text-[10px] px-2 py-0.5 rounded-full bg-violet/10 text-violet font-semibold"
+                className="text-micro px-2 py-0.5 rounded-full bg-violet/10 text-violet font-semibold"
               >
-                {sorted.length} {t("feed.posts")}
+                {founders.length} Founders
               </motion.span>
             )}
             {liveCount > 0 && (
@@ -184,9 +197,9 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
             <FeedTabs />
             <div className="flex-1" />
             <div className="flex items-center gap-2">
-              <span className="text-caption text-muted">
-                {sorted.length} {t("feed.matching")}
-              </span>
+                  <span className="text-caption text-muted">
+                    {founders.length} {t("feed.matching")}
+                  </span>
               <SortPills />
             </div>
           </div>
@@ -195,11 +208,11 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
         {loading ? (
           <SkeletonCard variant="feed" count={3} />
         ) : sorted.length === 0 ? (
-          <div className="panel p-4">
+          <div className="surface-card p-4">
             <AnimatedEmptyState
               variant={feedView === "dreamer" ? "dreamer" : feedView === "reality" ? "reality" : "default"}
               title={t("feed.empty")}
-              description="Adjust the risk slider or change your feed view to discover more opportunities."
+              description="Adjust your feed view to discover more founders and opportunities."
               action={user ? { label: "Create Post", onClick: () => window.location.href = `/${lang}/create` } : undefined}
             />
           </div>
@@ -208,19 +221,33 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
             initial="hidden"
             animate="visible"
             variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.08 } } }}
-            className="space-y-4"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
           >
             <AnimatePresence mode="popLayout">
-              {sorted.map((post) => (
+              {founders.map((founder) => (
                 <motion.div
-                  key={post.id}
+                  key={founder.id}
                   layout
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 >
-                  <PostCard post={post} />
+                  <FounderCard
+                    id={founder.id}
+                    name={founder.name}
+                    handle={founder.handle}
+                    headline={founder.headline}
+                    avatar={founder.avatar}
+                    momentumScore={founder.momentumScore}
+                    revenueDelta="+32%"
+                    userDelta="+18%"
+                    tractionDelta="+24%"
+                    tags={["SaaS", "AI", "B2B"]}
+                    type={founder.type}
+                    onMessage={() => window.location.href = `/${lang}/chat`}
+                    onInvest={() => window.location.href = `/${lang}/investor`}
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>

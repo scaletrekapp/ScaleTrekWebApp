@@ -38,10 +38,10 @@ export function MomentumStories() {
 
   return (
     <>
-      <div className="relative">
+      <div className="relative mb-2">
         <div
           ref={scrollRef}
-          className="flex gap-3 overflow-x-auto scrollbar-hide py-2 px-1"
+          className="flex gap-3 overflow-x-auto overflow-y-hidden scrollbar-hide py-1"
         >
           {MOCK_STORIES.map((story, i) => (
             <motion.button
@@ -59,14 +59,12 @@ export function MomentumStories() {
                   </div>
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-onyx-900 border-2 border-onyx-900 flex items-center justify-center">
-                  <div className="w-2 h-2 rounded-full bg-onyx-700 flex items-center justify-center">
-                    <svg className="w-1.5 h-1.5 text-slate-muted" viewBox="0 0 24 24" fill="currentColor">
-                      <path d={TYPE_ICONS[story.type]} />
-                    </svg>
-                  </div>
+                  <svg className="w-2.5 h-2.5 text-slate-muted" viewBox="0 0 24 24" fill="currentColor">
+                    <path d={TYPE_ICONS[story.type]} />
+                  </svg>
                 </div>
               </div>
-              <span className="text-[10px] text-slate-muted truncate max-w-[56px]">{story.thumbnailLabel}</span>
+              <span className="text-[10px] text-slate-muted truncate max-w-[56px] leading-none">{story.thumbnailLabel}</span>
             </motion.button>
           ))}
         </div>

@@ -99,6 +99,13 @@
   "profile": {
     "title": "Profile",
     "editProfile": "Edit Profile",
+    "about": "About",
+    "signals": "Signals",
+    "scores": "Scores",
+    "postsPlaceholder": "Your posts and milestones will appear here.",
+    "signalsPlaceholder": "Signals from the community will appear here.",
+    "followers": "Followers",
+    "following": "Following",
     "showcases": "Showcases",
     "momentum": "Momentum",
     "realityScore": "Reality Score",
