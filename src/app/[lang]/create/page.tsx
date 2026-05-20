@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Navbar } from "@/components/layout/Navbar";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useRouter } from "next/navigation";
@@ -37,7 +36,6 @@ export default function CreatePage({ params: { lang } }: { params: { lang: strin
 
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
-      <Navbar lang={lang} />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-2xl font-bold text-midnight dark:text-white mb-8">{t("create.title")}</h1>
 

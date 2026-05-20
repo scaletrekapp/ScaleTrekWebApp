@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../globals.css";
 import { Providers } from "../providers";
 import { Inter } from "next/font/google";
+import { LayoutProvider } from "./LayoutProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -36,7 +37,9 @@ export default function RootLayout({
         />
       </head>
       <body className={`min-h-screen font-sans ${isRTL ? "font-arabic" : ""}`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <LayoutProvider lang={lang}>{children}</LayoutProvider>
+        </Providers>
       </body>
     </html>
   );

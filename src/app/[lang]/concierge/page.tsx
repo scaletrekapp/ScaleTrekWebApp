@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Navbar } from "@/components/layout/Navbar";
 import { Badge } from "@/components/ui/Badge";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -141,7 +140,6 @@ export default function ConciergePage({ params: { lang } }: { params: { lang: st
 
   return (
     <div className="min-h-screen bg-graphite">
-      <Navbar lang={lang} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

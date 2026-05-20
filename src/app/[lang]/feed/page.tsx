@@ -1,7 +1,6 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Navbar } from "@/components/layout/Navbar";
 import { FeedTabs, SortPills, PostCard } from "@/components/feed";
 import { SocialTicker } from "@/components/ui/SocialTicker";
 import { LiveIndicator } from "@/components/ui/LiveIndicator";
@@ -132,7 +131,6 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
 
   return (
     <div className="min-h-screen bg-graphite">
-      <Navbar lang={lang} />
       <SocialTicker />
       <motion.main
         initial={{ opacity: 0, y: 20 }}

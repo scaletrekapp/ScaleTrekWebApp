@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
-import { Navbar } from "@/components/layout/Navbar";
 import { Badge } from "@/components/ui/Badge";
 import { GlowButton } from "@/components/ui/GlowButton";
 import { TabBar } from "@/components/ui/TabBar";
@@ -627,7 +626,6 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
   if (!authUser || loading) {
     return (
       <div className="min-h-screen bg-graphite">
-        <Navbar lang={lang} />
         <main className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center gap-4 mb-10">
             <Skeleton className="w-12 h-12 rounded-xl" />
@@ -654,7 +652,6 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-graphite">
-        <Navbar lang={lang} />
         <main className="max-w-3xl mx-auto px-4 py-20 text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-red-500/15 border border-red-500/20 flex items-center justify-center">
             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -688,8 +685,6 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
 
   return (
     <div className="min-h-screen bg-graphite">
-      <Navbar lang={lang} />
-
       <AnimatePresence>
         {showToast && (
           <motion.div

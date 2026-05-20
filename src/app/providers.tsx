@@ -74,17 +74,16 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-midnight">
+      <div className="min-h-screen flex items-center justify-center bg-onyx-900">
         <div className="w-8 h-8 border-2 border-violet border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} forcedTheme="dark">
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <I18nextProvider i18n={i18n}>
         <SessionRestorer>
-          <AnimatedGradient />
           {children}
         </SessionRestorer>
       </I18nextProvider>

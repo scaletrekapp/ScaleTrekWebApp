@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Navbar } from "@/components/layout/Navbar";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { GlowButton } from "@/components/ui/GlowButton";
@@ -526,7 +525,6 @@ export default function InvestorPage({ params: { lang } }: { params: { lang: str
     return (
       <div className="min-h-screen bg-white dark:bg-midnight">
         <AnimatedGradient />
-        <Navbar lang={lang} />
         <main className="max-w-3xl mx-auto px-4 py-20 text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-slate-muted/10 border border-slate-border flex items-center justify-center">
             <svg className="w-8 h-8 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -544,7 +542,6 @@ export default function InvestorPage({ params: { lang } }: { params: { lang: str
     return (
       <div className="min-h-screen bg-white dark:bg-midnight">
         <AnimatedGradient />
-        <Navbar lang={lang} />
         <main className="max-w-3xl mx-auto px-4 py-20 text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-red-500/15 border border-red-500/20 flex items-center justify-center">
             <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -564,7 +561,6 @@ export default function InvestorPage({ params: { lang } }: { params: { lang: str
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
       <AnimatedGradient />
-      <Navbar lang={lang} />
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">

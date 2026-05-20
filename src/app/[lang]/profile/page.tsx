@@ -3,7 +3,6 @@
 import { motion, type Variants } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
-import { Navbar } from "@/components/layout/Navbar";
 import { Badge } from "@/components/ui/Badge";
 import { MomentumPill } from "@/components/ui/MomentumPill";
 import { LiveIndicator } from "@/components/ui/LiveIndicator";
@@ -80,7 +79,6 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
 
   return (
     <div className="min-h-screen bg-graphite">
-      <Navbar lang={lang} />
         <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {loading || !profile ? (
           <SkeletonCard variant="profile" />

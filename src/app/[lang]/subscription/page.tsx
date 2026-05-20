@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Navbar } from "@/components/layout/Navbar";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { useSubscriptionStore } from "@/stores/useSubscriptionStore";
@@ -41,7 +40,6 @@ export default function SubscriptionPage({ params: { lang } }: { params: { lang:
 
   return (
     <div className="min-h-screen bg-white dark:bg-midnight">
-      <Navbar lang={lang} />
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet/10 text-violet text-xs font-semibold tracking-wide uppercase mb-4">
