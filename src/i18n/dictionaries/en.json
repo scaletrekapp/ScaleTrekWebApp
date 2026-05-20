@@ -19,6 +19,7 @@
   },
   "nav": {
     "feed": "Feed",
+    "chat": "Messages",
     "create": "Create",
     "signal": "Signal",
     "profile": "Profile",
@@ -33,7 +34,10 @@
     "home": "Home",
     "controlRoom": "Control Room",
     "investor": "Investor",
-    "investorRoom": "Investor Room"
+    "investorRoom": "Investor Room",
+    "sectionMain": "Main",
+    "sectionAccount": "Account",
+    "sectionInvestor": "Investor"
   },
   "auth": {
     "welcomeBack": "Welcome Back",
@@ -325,6 +329,23 @@
     "userResponsibility": "Users are responsible for verifying the accuracy of their own profile information, conducting independent due diligence on any counterparty, and complying with all applicable Moroccan laws and regulations.",
     "dataUsage": "We collect profile information, usage data, and communication metadata to operate and improve the platform. We do not sell personal data. Data is stored securely on Supabase infrastructure.",
     "contact": "For questions about these terms, contact support@scaletrek.app"
+  },
+  "migration": {
+    "title": "Messages"
+  },
+  "rightPanel": {
+    "overview": "Overview",
+    "liveMomentum": "Live Momentum",
+    "avgTraction": "Avg. Traction",
+    "activeDeals": "Active Deals",
+    "verifiedMilestones": "Verified Milestones",
+    "activeChats": "Active Chats",
+    "quickActions": "Quick Actions",
+    "newInvoice": "New Invoice",
+    "verify": "Verify Milestone",
+    "upgrade": "Upgrade to Pro",
+    "upgradeDesc": "Unlock premium features including priority support and advanced analytics.",
+    "viewPlans": "View Plans"
   },
   "migration": {
     "title": "Profile Migration",

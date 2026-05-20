@@ -10,6 +10,7 @@ import { TabBar } from "@/components/ui/TabBar";
 import { Sparkline, MiniBar } from "@/components/ui/DataViz";
 import { ExpandableSection } from "@/components/ui/ExpandableSection";
 import { AnimatedGradient } from "@/components/ui/AnimatedGradient";
+import { FilterMatrix } from "@/components/investor/FilterMatrix";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { createClient } from "@/lib/supabase-client";
 import { useTranslation } from "react-i18next";
@@ -777,6 +778,17 @@ export default function InvestorPage({ params: { lang } }: { params: { lang: str
 
             {tab === "pipeline" && (
               <div className="space-y-6">
+                <details className="group">
+                  <summary className="flex items-center gap-2 text-[11px] font-semibold text-slate-muted hover:text-white cursor-pointer transition-colors mb-2">
+                    <svg className="w-3.5 h-3.5 transition-transform duration-300 group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                    Filter Matrix (Velocity · Sector · Traction)
+                  </summary>
+                  <div className="mb-4">
+                    <FilterMatrix />
+                  </div>
+                </details>
                 <GlassCard variant="dark" className="sticky top-20 z-30">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                     <div className="relative flex-1 w-full">

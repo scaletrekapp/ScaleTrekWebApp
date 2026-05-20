@@ -8,6 +8,7 @@ import { SkeletonCard } from "@/components/ui/SkeletonCard";
 import { AnimatedEmptyState } from "@/components/ui/AnimatedEmptyState";
 import { ParticleField } from "@/components/ui/ParticleField";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
+import { MomentumStories } from "@/components/feed/MomentumStories";
 import { useRealtime } from "@/components/ui/useRealtime";
 import { useFeedStore } from "@/stores/useFeedStore";
 import { useAuthStore } from "@/stores/useAuthStore";
@@ -169,7 +170,15 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.6 }}
+          transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <MomentumStories />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
         >
           <div className="panel p-4 mb-8 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-violet/5 via-transparent to-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
