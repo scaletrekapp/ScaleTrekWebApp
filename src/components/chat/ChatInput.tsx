@@ -83,7 +83,7 @@ export function ChatInput({ onSend, onInsertMilestone, placeholder = "Type an en
             placeholder={placeholder}
             disabled={disabled}
             rows={1}
-            className="w-full px-4 py-2.5 rounded-xl bg-onyx-800 border border-onyx-700/60 text-white text-sm placeholder:text-slate-muted/40 resize-none focus:outline-none focus:ring-2 focus:ring-violet/30 transition-all min-h-[38px] max-h-[120px]"
+            className="w-full px-4 py-2.5 rounded-xl surface-card text-white text-body placeholder:text-muted resize-none focus:outline-none focus:ring-2 focus:ring-violet/30 transition-all min-h-[38px] max-h-[120px]"
           />
         </div>
 

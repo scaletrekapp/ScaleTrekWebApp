@@ -180,65 +180,15 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <div className="panel p-4 mb-8 relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-violet/5 via-transparent to-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet/20 to-cyan/20 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
-                  </svg>
-                </div>
-                <div>
-                  <span className="text-sm font-semibold text-white">{t("feed.controlRoom")}</span>
-                  <p className="text-[10px] text-muted">{t("feed.hint")}</p>
-                </div>
-              </div>
-              <span className="text-xs text-muted font-mono">
+          <div className="flex items-center gap-3 mb-6">
+            <FeedTabs />
+            <div className="flex-1" />
+            <div className="flex items-center gap-2">
+              <span className="text-caption text-muted">
                 {sorted.length} {t("feed.matching")}
               </span>
+              <SortPills />
             </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-muted">
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-violet animate-pulse-dot" />
-                  {t("feed.highRiskDreamers")}
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-pulse-dot" style={{ animationDelay: "0.5s" }} />
-                  {t("feed.lowRiskReality")}
-                </span>
-              </div>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                value={riskSlider}
-                onChange={(e) => setRiskSlider(Number(e.target.value))}
-                className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-gradient-to-r from-violet via-violet/50 to-cyan"
-                style={{
-                  accentColor: riskSlider < 40 ? "#8B5CF6" : riskSlider > 60 ? "#06B6D4" : "#8B5CF6",
-                }}
-              />
-              <div className="flex items-center justify-between text-xs font-semibold">
-                <span className="text-violet">{t("feed.blueprint")}</span>
-                <span className="text-cyan">{t("feed.steel")}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          <div className="flex items-center justify-between mb-6">
-            <FeedTabs />
-            <SortPills />
           </div>
         </motion.div>
 

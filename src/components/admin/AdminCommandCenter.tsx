@@ -66,17 +66,17 @@ const MOCK_MILESTONES: Milestone[] = [
   },
 ];
 
-const STATUS_COLORS: Record<string, string> = {
-  pending: "bg-amber/20 text-amber border-amber/30",
-  approved: "bg-emerald/20 text-emerald border-emerald/30",
-  rejected: "bg-ruby/20 text-ruby border-ruby/30",
-  flagged: "bg-violet/20 text-violet-light border-violet/30",
-};
+  const STATUS_COLORS: Record<string, string> = {
+    pending: "bg-amber/20 text-amber border-amber/30",
+    approved: "bg-emerald/20 text-emerald border-emerald/30",
+    rejected: "bg-ruby/20 text-ruby border-ruby/30",
+    flagged: "bg-violet/20 text-violet-light border-violet/30",
+  };
 
-function getStatusBadge(status: string) {
-  const c = STATUS_COLORS[status] || "text-slate-muted border-onyx-700/60";
-  return `px-2 py-0.5 rounded-full text-[10px] font-semibold border ${c}`;
-}
+  function getStatusBadge(status: string) {
+    const c = STATUS_COLORS[status] || "text-muted border-onyx-700/60";
+    return `px-2 py-0.5 rounded-full text-[10px] font-semibold border ${c}`;
+  }
 
 function formatDate(d: string) {
   return new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
@@ -175,7 +175,7 @@ export function AdminCommandCenter() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search milestones..."
-            className="w-full pl-9 pr-3 py-2 rounded-lg bg-onyx-800/60 border border-onyx-700/60 text-xs text-white placeholder:text-slate-subtle focus:outline-none focus:ring-2 focus:ring-violet/40"
+            className="w-full pl-9 pr-3 py-2 rounded-lg surface-card text-caption text-white placeholder:text-subdued focus:outline-none focus:ring-2 focus:ring-violet/40"
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
             <kbd className="hidden sm:inline-flex px-1.5 py-0.5 rounded text-[9px] font-mono bg-onyx-700/60 text-slate-subtle border border-onyx-700/60">⌘K</kbd>
@@ -192,7 +192,7 @@ export function AdminCommandCenter() {
       {/* Dual-pane */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-[500px]">
         {/* Left: milestone list */}
-        <div className="panel overflow-hidden flex flex-col">
+        <div className="surface-card overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-onyx-700/60">
             <span className="text-xs font-semibold text-white">Milestones</span>
             <span className="text-[10px] font-mono text-slate-muted">{filtered.length} total</span>
@@ -232,7 +232,7 @@ export function AdminCommandCenter() {
         </div>
 
         {/* Right: detail / audit viewer */}
-        <div className="panel overflow-hidden flex flex-col">
+        <div className="surface-card overflow-hidden flex flex-col">
           {!selected ? (
             <div className="flex-1 flex flex-col items-center justify-center text-center p-6">
               <svg className="w-10 h-10 text-slate-subtle mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>

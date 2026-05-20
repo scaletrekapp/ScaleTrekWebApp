@@ -52,8 +52,8 @@ export function MomentumStories() {
               onClick={() => handleStoryClick(story)}
               className="flex flex-col items-center gap-1.5 shrink-0 group"
             >
-              <div className="relative">
-                <div className="w-14 h-14 rounded-full p-[2px] bg-gradient-to-br from-violet via-emerald to-cyan animate-pulse-slower">
+              <div className="relative" style={{ filter: `drop-shadow(0 0 6px ${story.avatarColor}40)` }}>
+                <div className="w-14 h-14 rounded-full p-[2px] bg-gradient-to-br from-violet via-emerald to-cyan">
                   <div className="w-full h-full rounded-full bg-onyx-900 flex items-center justify-center text-sm font-bold" style={{ color: story.avatarColor }}>
                     {story.userName.charAt(0)}
                   </div>

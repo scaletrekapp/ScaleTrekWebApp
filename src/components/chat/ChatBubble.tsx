@@ -42,10 +42,10 @@ export function ChatBubble({ content, sender, timestamp, status = "sent", encryp
         </div>
 
         <div className={`flex items-center gap-2 mt-1 px-1 ${sender === "me" ? "justify-end" : "justify-start"}`}>
-          <span className="text-[10px] text-slate-subtle font-mono">{timestamp}</span>
+          <span className="text-micro font-mono text-subdued">{timestamp}</span>
 
           {encrypted && sender === "me" && (
-            <span className="flex items-center gap-0.5 text-[10px] text-emerald/70 font-mono" title="End-to-end encrypted">
+            <span className="flex items-center gap-0.5 text-micro text-emerald/70 font-mono" title="End-to-end encrypted">
               <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
               </svg>

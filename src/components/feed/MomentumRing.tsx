@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 
 interface MomentumRingProps {
   score: number;
@@ -21,6 +21,7 @@ function getColor(score: number) {
 }
 
 export function MomentumRing({ score, size = "md", onClick }: MomentumRingProps) {
+  const filterId = useId();
   const match = getColor(score);
   const dimensions = size === "lg" ? 96 : size === "md" ? 72 : 48;
   const strokeWidth = size === "lg" ? 5 : size === "md" ? 4 : 3;
@@ -45,10 +46,21 @@ export function MomentumRing({ score, size = "md", onClick }: MomentumRingProps)
       onClick={onClick}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      className="relative inline-flex items-center justify-center outline-none"
+      className="relative inline-flex items-center justify-center outline-none rounded-full"
       style={{ width: dimensions, height: dimensions }}
     >
       <svg width={dimensions} height={dimensions} className="transform -rotate-90">
+        {score >= 65 && (
+          <defs>
+            <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation={size === "lg" ? 6 : 4} result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+        )}
         <circle
           cx={dimensions / 2}
           cy={dimensions / 2}
@@ -67,6 +79,7 @@ export function MomentumRing({ score, size = "md", onClick }: MomentumRingProps)
           strokeLinecap="round"
           strokeDasharray={circumference}
           style={{ strokeDashoffset: progress }}
+          filter={score >= 65 ? `url(#${filterId})` : undefined}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
@@ -77,25 +90,6 @@ export function MomentumRing({ score, size = "md", onClick }: MomentumRingProps)
           {rounded}
         </motion.span>
       </div>
-
-      {/* Glow ring — uses SVG filter for circular drop-shadow */}
-      {score >= 65 && (
-        <svg
-          className="absolute inset-0 pointer-events-none"
-          width={dimensions}
-          height={dimensions}
-          style={{ filter: `drop-shadow(0 0 ${size === "lg" ? "12px" : "8px"} ${match.color})` }}
-        >
-          <circle
-            cx={dimensions / 2}
-            cy={dimensions / 2}
-            r={radius}
-            fill={match.color}
-            opacity={0.25}
-            className="animate-pulse-slow"
-          />
-        </svg>
-      )}
     </motion.button>
   );
 }

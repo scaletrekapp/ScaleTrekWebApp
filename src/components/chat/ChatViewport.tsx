@@ -55,10 +55,10 @@ export function ChatViewport({
       />
 
       {/* Clean Room bar */}
-      <div className="shrink-0 px-4 sm:px-6 py-2 border-b border-onyx-700/30 bg-onyx-950/30">
+      <div className="surface-card shrink-0 mx-4 mt-2 mb-0 px-4 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-[10px] text-slate-subtle uppercase tracking-wider">Data Room</span>
+            <span className="text-micro text-subdued">Data Room</span>
             <span className={`clean-room-badge ${cleanRoomStatus}`}>
               {cleanRoomStatus === "granted" ? "Access Granted" : cleanRoomStatus === "requested" ? "Pending Approval" : "Restricted"}
             </span>
@@ -113,8 +113,8 @@ export function ChatViewport({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
                 </svg>
               </div>
-              <p className="text-sm text-slate-muted mb-1">No messages yet</p>
-              <p className="text-xs text-slate-subtle">E2E-encrypted messages appear here</p>
+              <p className="text-body text-muted mb-1">No messages yet</p>
+              <p className="text-caption text-subdued">E2E-encrypted messages appear here</p>
             </div>
           )}
         </div>
