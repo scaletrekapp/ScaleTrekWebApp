@@ -70,6 +70,7 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
   const [activeTab, setActiveTab] = useState<ProfileTab>("posts");
   const [imgError, setImgError] = useState(false);
   const [followerAvatars, setFollowerAvatars] = useState<string[]>([]);
+  const [avatarHover, setAvatarHover] = useState(false);
   const coverRef = useRef<HTMLDivElement>(null);
   const [scrollY, setScrollY] = useState(0);
 
@@ -155,7 +156,11 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
             {/* ── Header ── */}
             <motion.div variants={fadeUpVariants} className="relative px-4 sm:px-6 -mt-14 mb-6">
               <div className="flex flex-col sm:flex-row sm:items-end gap-4 sm:gap-6">
-                <div className="relative shrink-0 group/avatar">
+                <div
+                  className="relative shrink-0"
+                  onMouseEnter={() => setAvatarHover(true)}
+                  onMouseLeave={() => setAvatarHover(false)}
+                >
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.4, ease }}
@@ -176,8 +181,8 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
                   </motion.div>
                   <a
                     href={`/${lang}/profile/edit`}
-                    className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-all duration-300 shadow-lg"
-                    style={{ backgroundColor: "var(--violet)", color: "#fff" }}
+                    className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-all duration-300"
+                    style={{ backgroundColor: "var(--violet)", color: "#fff", opacity: avatarHover ? 1 : 0 }}
                   >
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 16.604a4.5 4.5 0 01-1.897 1.132l-2.685.8.8-2.685a4.5 4.5 0 011.132-1.897L16.863 4.487zm0 0L19.5 7.125" />

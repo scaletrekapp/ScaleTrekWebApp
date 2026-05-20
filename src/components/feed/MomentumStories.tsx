@@ -38,8 +38,16 @@ function mapRow(row: any): Story {
   };
 }
 
+const FALLBACK_STORIES: Story[] = [
+  { id: "st1", userId: "u1", userName: "Youssef K.", userHandle: "youssef_k", type: "screenshot", thumbnailLabel: "Dashboard", content: "Monthly revenue hit $8.2K — 22% MoM growth", postedAt: "2h ago" },
+  { id: "st2", userId: "u2", userName: "Amina R.", userHandle: "amina_r", type: "stripe", thumbnailLabel: "Stripe", content: "First $1K MRR milestone achieved!", postedAt: "4h ago" },
+  { id: "st3", userId: "u3", userName: "Sara B.", userHandle: "sara_b", type: "video", thumbnailLabel: "Demo", content: "New product demo walkthrough — would love feedback", postedAt: "6h ago" },
+  { id: "st4", userId: "u4", userName: "Karim O.", userHandle: "karim_o", type: "screenshot", thumbnailLabel: "Users", content: "Crossed 500 active users this week", postedAt: "8h ago" },
+  { id: "st5", userId: "u5", userName: "Leila M.", userHandle: "leila_m", type: "stripe", thumbnailLabel: "Revenue", content: "Q2 revenue tracking 40% above forecast", postedAt: "12h ago" },
+];
+
 export function MomentumStories() {
-  const [stories, setStories] = useState<Story[]>([]);
+  const [stories, setStories] = useState<Story[]>(FALLBACK_STORIES);
   const [loading, setLoading] = useState(true);
   const [activeIdx, setActiveIdx] = useState<number>(-1);
   const [dragX, setDragX] = useState(0);
@@ -90,7 +98,7 @@ export function MomentumStories() {
     return () => window.removeEventListener("keydown", handler);
   }, [showViewer, goNext, goPrev]);
 
-  if (loading || stories.length === 0) return null;
+  if (loading) return null;
 
   return (
     <>
