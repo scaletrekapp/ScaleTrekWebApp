@@ -12,6 +12,18 @@
 
   ::selection { @apply bg-violet/30 text-white; }
 
+  input, select, textarea, button, [contenteditable] {
+    @apply bg-graphite-900 border border-graphite-800/60 text-white;
+  }
+
+  input::placeholder, textarea::placeholder {
+    @apply text-slate-muted/50;
+  }
+
+  select option {
+    @apply bg-graphite-900 text-white;
+  }
+
   :root {
     --accent: 99 102 241;
     --accent-light: 129 140 248;

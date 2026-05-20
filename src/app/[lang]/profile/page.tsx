@@ -81,7 +81,7 @@ export default function ProfilePage({ params: { lang } }: { params: { lang: stri
   return (
     <div className="min-h-screen bg-graphite">
       <Navbar lang={lang} />
-        <main className="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         {loading || !profile ? (
           <SkeletonCard variant="profile" />
         ) : (

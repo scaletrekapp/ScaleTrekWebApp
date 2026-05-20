@@ -28,10 +28,10 @@ export default function DossierPage({ params: { lang } }: { params: { lang: stri
   if (!profile) return null;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-midnight print:bg-white">
-      <div className="max-w-3xl mx-auto px-4 py-8 print:py-0 print:px-0">
+    <div className="min-h-screen bg-graphite">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 print:py-0 print:px-0">
         <div className="flex items-center justify-between mb-8 print:hidden">
-          <button onClick={() => router.back()} className="flex items-center gap-1.5 text-sm text-slate-muted hover:text-midnight dark:hover:text-white transition-colors">
+          <button onClick={() => router.back()} className="flex items-center gap-1.5 text-sm text-slate-muted hover:text-white transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
             </svg>
