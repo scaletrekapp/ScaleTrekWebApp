@@ -43,8 +43,8 @@ export function Navbar({ lang }: { lang: string }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-border dark:border-slate-border bg-white/80 dark:bg-midnight/80 backdrop-blur-xl">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-40 bg-graphite/80 backdrop-blur-2xl border-b border-graphite-800/60">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
         <Link href={`/${lang}/feed`} className="shrink-0">
           <Logo size={28} />
         </Link>
@@ -58,8 +58,8 @@ export function Navbar({ lang }: { lang: string }) {
                 href={`/${lang}${item.href}`}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-violet/10 dark:bg-violet/10 text-violet dark:text-violet"
-                    : "text-slate-muted hover:text-midnight dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
+                    ? "bg-violet/10 text-violet-light"
+                    : "text-slate-muted hover:text-white hover:bg-white/5"
                 }`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -82,59 +82,59 @@ export function Navbar({ lang }: { lang: string }) {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-midnight dark:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-white hover:bg-white/5 transition-colors"
               >
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet to-cyan flex items-center justify-center text-white font-bold text-xs">
+                <div className="w-7 h-7 rounded-full bg-violet/20 text-violet-light flex items-center justify-center font-bold text-xs">
                   {user.handle?.charAt(0).toUpperCase() || "?"}
                 </div>
-                <span className="hidden sm:block max-w-[100px] truncate">@{user.handle}</span>
+                <span className="hidden sm:block max-w-[100px] truncate text-white">@{user.handle}</span>
                 <svg className={`w-3.5 h-3.5 text-slate-muted transition-transform ${dropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
               </button>
 
               {dropdownOpen && (
-                <div className="absolute end-0 top-full mt-2 w-56 bg-white dark:bg-midnight2 border border-slate-border rounded-xl shadow-2xl shadow-black/20 py-1.5 z-50">
-                  <div className="px-4 py-2 border-b border-slate-border">
-                    <p className="text-sm font-medium text-midnight dark:text-white truncate">@{user.handle}</p>
+                <div className="absolute end-0 top-full mt-2 w-56 bg-graphite-900 border border-graphite-800/60 rounded-xl shadow-2xl shadow-black/20 py-1.5 z-50">
+                  <div className="px-4 py-2 border-b border-graphite-800/60">
+                    <p className="text-sm font-medium text-white truncate">@{user.handle}</p>
                     <p className="text-xs text-slate-muted truncate">{user.headline || user.role}</p>
                   </div>
 
                   <Link href={`/${lang}/profile`} onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-midnight dark:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-white/5 transition-colors">
                     <AvatarIcon /> {t("profile.title")}
                   </Link>
 
                   <Link href={`/${lang}/settings`} onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-midnight dark:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-white/5 transition-colors">
                     <SettingsIcon /> {t("settings.title")}
                   </Link>
 
                   <Link href={`/${lang}/subscription`} onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-midnight dark:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-white/5 transition-colors">
                     <LightningIcon /> {t("subscription.title")}
                   </Link>
 
                   <Link href={`/${lang}/migration`} onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-midnight dark:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-white/5 transition-colors">
                     <TransferIcon /> {t("migration.title")}
                   </Link>
 
                   {(user?.role === "investor" || isSuperAdmin) && (
                     <Link href={`/${lang}/investor`} onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-cyan dark:text-cyan hover:bg-cyan/5 transition-colors">
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-cyan hover:bg-cyan/5 transition-colors">
                       <ChartIcon /> Control Room
                     </Link>
                   )}
                   {isSuperAdmin && (
                     <Link href={`/${lang}/admin`} onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-500/10 transition-colors border-t border-slate-border mt-1 pt-2">
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-violet-light hover:bg-violet/10 transition-colors border-t border-graphite-800/60 mt-1 pt-2">
                       <ShieldIcon /> {t("nav.admin")}
                     </Link>
                   )}
 
                   <button onClick={handleSignOut}
-                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-muted hover:text-red-500 hover:bg-red-500/5 transition-colors border-t border-slate-border mt-1 pt-2">
+                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-muted hover:text-red-400 hover:bg-red-500/5 transition-colors border-t border-graphite-800/60 mt-1 pt-2">
                     <SignOutIcon /> {t("nav.signOut")}
                   </button>
                 </div>
@@ -143,7 +143,7 @@ export function Navbar({ lang }: { lang: string }) {
           ) : (
             <div className="flex items-center gap-2">
               <Link href={`/${lang}`}
-                className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-muted hover:text-midnight dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                className="hidden sm:flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-semibold text-slate-muted hover:text-white hover:bg-white/5 transition-colors">
                 {t("nav.logIn")}
               </Link>
               <Link href={`/${lang}`}
@@ -184,7 +184,7 @@ function LightningIcon() {
 
 function ShieldIcon() {
   return (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+    <svg className="w-4 h-4 text-violet-light" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
     </svg>
   );
@@ -200,7 +200,7 @@ function SignOutIcon() {
 
 function ChartIcon() {
   return (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+    <svg className="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
     </svg>
   );

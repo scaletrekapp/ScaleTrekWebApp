@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
 import { FeedTabs, SortPills, PostCard } from "@/components/feed";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { SocialTicker } from "@/components/ui/SocialTicker";
 import { LiveIndicator } from "@/components/ui/LiveIndicator";
 import { SkeletonCard } from "@/components/ui/SkeletonCard";
@@ -132,7 +131,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-midnight">
+    <div className="min-h-screen bg-graphite">
       <Navbar lang={lang} />
       <SocialTicker />
       <motion.main
@@ -145,7 +144,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
 
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-midnight dark:text-white">{t("feed.explore")}</h1>
+            <h1 className="text-xl font-bold text-white">{t("feed.explore")}</h1>
             {!loading && (
               <motion.span
                 initial={{ scale: 0 }}
@@ -174,7 +173,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.6 }}
         >
-          <GlassCard variant="dark" className="mb-8 relative overflow-hidden group">
+          <div className="panel p-4 mb-8 relative">
           <div className="absolute inset-0 bg-gradient-to-r from-violet/5 via-transparent to-cyan/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
@@ -185,17 +184,17 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
                   </svg>
                 </div>
                 <div>
-                  <span className="text-sm font-semibold text-midnight dark:text-white">{t("feed.controlRoom")}</span>
-                  <p className="text-[10px] text-slate-muted">{t("feed.hint")}</p>
+                  <span className="text-sm font-semibold text-white">{t("feed.controlRoom")}</span>
+                  <p className="text-[10px] text-muted">{t("feed.hint")}</p>
                 </div>
               </div>
-              <span className="text-xs text-slate-muted font-mono">
+              <span className="text-xs text-muted font-mono">
                 {sorted.length} {t("feed.matching")}
               </span>
             </div>
 
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-slate-muted">
+              <div className="flex items-center justify-between text-xs text-muted">
                 <span className="flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-violet animate-pulse-dot" />
                   {t("feed.highRiskDreamers")}
@@ -222,7 +221,7 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
               </div>
             </div>
           </div>
-        </GlassCard>
+        </div>
         </motion.div>
 
         <motion.div
@@ -239,14 +238,14 @@ export default function FeedPage({ params: { lang } }: { params: { lang: string 
         {loading ? (
           <SkeletonCard variant="feed" count={3} />
         ) : sorted.length === 0 ? (
-          <GlassCard variant="dark">
+          <div className="panel p-4">
             <AnimatedEmptyState
               variant={feedView === "dreamer" ? "dreamer" : feedView === "reality" ? "reality" : "default"}
               title={t("feed.empty")}
               description="Adjust the risk slider or change your feed view to discover more opportunities."
               action={user ? { label: "Create Post", onClick: () => window.location.href = `/${lang}/create` } : undefined}
             />
-          </GlassCard>
+          </div>
         ) : (
           <motion.div
             initial="hidden"

@@ -5,18 +5,13 @@ import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { Navbar } from "@/components/layout/Navbar";
-import { GlassCard } from "@/components/ui/GlassCard";
 import { Badge } from "@/components/ui/Badge";
 import { GlowButton } from "@/components/ui/GlowButton";
-import { KPI } from "@/components/ui/KPI";
 import { TabBar } from "@/components/ui/TabBar";
 import { MiniBar } from "@/components/ui/DataViz";
-import { HolographicCard } from "@/components/ui/HolographicCard";
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { LiveMetric } from "@/components/ui/LiveMetric";
 import { useRealtime } from "@/components/ui/useRealtime";
-import { ExpandableSection } from "@/components/ui/ExpandableSection";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { createClient } from "@/lib/supabase-client";
 import type { User } from "@/types";
@@ -28,7 +23,9 @@ type AdminTab =
   | "dispute-control"
   | "content-moderation"
   | "infrastructure-switchboard"
-  | "audit-log";
+  | "audit-log"
+  | "payments"
+  | "investor-kyc";
 
 interface AdminUser extends User {
   email?: string;
@@ -129,13 +126,23 @@ const TABS: { key: AdminTab; label: string; icon: string }[] = [
   },
   {
     key: "infrastructure-switchboard",
-    label: "Infrastructure Switchboard",
+    label: "Infrastructure",
     icon: "M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3",
   },
   {
     key: "audit-log",
     label: "Audit Log",
     icon: "M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z",
+  },
+  {
+    key: "payments",
+    label: "Payment Queue",
+    icon: "M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125V9M7.5 9.75h3m-6 0h3m-3 2.25h3m-3 2.25h3m-3 2.25h3",
+  },
+  {
+    key: "investor-kyc",
+    label: "Investor KYC",
+    icon: "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z",
   },
 ];
 
@@ -156,22 +163,28 @@ function formatRelativeTime(dateStr: string): string {
   return `${days}d ago`;
 }
 
-const containerVariants = {
+const staggerContainer = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.04, delayChildren: 0.1 },
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
   },
 };
 
-const itemVariants = {
+const fadeSlideUp = {
   hidden: { opacity: 0, y: 16 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] as const } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
-const kpiVariants = {
-  hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const } },
+const statCardAnim = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const } },
+};
+
+const tabContentAnim = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const } },
+  exit: { opacity: 0, y: -8, transition: { duration: 0.3, ease: [0.16, 1, 0.3, 1] as const } },
 };
 
 export default function AdminPage({ params: { lang } }: { params: { lang: string } }) {
@@ -197,6 +210,8 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
   const [flags, setFlags] = useState<FeatureFlag[]>([]);
   const [adminPosts, setAdminPosts] = useState<AdminPost[]>([]);
   const [activityFeed, setActivityFeed] = useState<ActivityEvent[]>([]);
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [investorKyc, setInvestorKyc] = useState<any[]>([]);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -237,6 +252,14 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
         supabase.from("feature_flags").select("*"),
         supabase.from("posts").select("*").order("created_at", { ascending: false }).limit(20),
         supabase.from("disputes").select("*").order("created_at", { ascending: false }),
+      ]);
+
+      const [
+        invoicesRes,
+        investorKycRes,
+      ] = await Promise.allSettled([
+        supabase.from("invoices").select("*, profiles!inner(handle, email)").order("created_at", { ascending: false }),
+        supabase.from("investor_profiles").select("*, profiles!inner(handle, email)").order("created_at", { ascending: false }),
       ]);
 
       if (profilesRes.status === "fulfilled" && profilesRes.value.data) {
@@ -281,6 +304,14 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
 
       if (disputesRes.status === "fulfilled" && disputesRes.value.data) {
         setDisputes(disputesRes.value.data as Dispute[]);
+      }
+
+      if (invoicesRes.status === "fulfilled" && invoicesRes.value.data) {
+        setInvoices(invoicesRes.value.data);
+      }
+
+      if (investorKycRes.status === "fulfilled" && investorKycRes.value.data) {
+        setInvestorKyc(investorKycRes.value.data);
       }
 
       setLastUpdated(new Date());
@@ -356,7 +387,6 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
     }
   }, [loading, users, verifications, reports, disputes]);
 
-  // Realtime subscriptions
   useRealtime("profiles", "*", (payload) => {
     if (payload.eventType === "INSERT") {
       setUsers((prev: AdminUser[]) => [payload.new as AdminUser, ...prev]);
@@ -528,6 +558,26 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
     showMessage(`Dispute ${newStatus}`);
   };
 
+  const handleApprovePayment = async (invoiceId: string, userId: string, tier: string) => {
+    await supabase.from("invoices").update({ status: "paid", paid_at: new Date().toISOString() }).eq("id", invoiceId);
+    await supabase.from("subscriptions").update({ payment_status: "paid", tier, status: "active" }).eq("user_id", userId);
+    setInvoices((prev) => prev.map((inv) => (inv.id === invoiceId ? { ...inv, status: "paid" } : inv)));
+    showMessage(`Payment confirmed — ${tier} activated`);
+  };
+
+  const handleApproveInvestor = async (userId: string) => {
+    await supabase.from("investor_profiles").update({ investor_status: "approved", reviewed_by: authUser?.id, reviewed_at: new Date().toISOString() }).eq("user_id", userId);
+    await supabase.from("profiles").update({ role: "investor" }).eq("id", userId);
+    setInvestorKyc((prev) => prev.map((k) => (k.user_id === userId ? { ...k, investor_status: "approved" } : k)));
+    showMessage("Investor approved");
+  };
+
+  const handleRejectInvestor = async (userId: string) => {
+    await supabase.from("investor_profiles").update({ investor_status: "rejected", reviewed_by: authUser?.id, reviewed_at: new Date().toISOString() }).eq("user_id", userId);
+    setInvestorKyc((prev) => prev.map((k) => (k.user_id === userId ? { ...k, investor_status: "rejected" } : k)));
+    showMessage("Investor rejected");
+  };
+
   const toggleMaintenance = () => {
     const mf = flags.find((f) => f.key === "maintenance_mode");
     if (mf) toggleFlag("maintenance_mode", mf.enabled);
@@ -576,7 +626,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
 
   if (!authUser || loading) {
     return (
-      <div className="min-h-screen bg-midnight">
+      <div className="min-h-screen bg-graphite">
         <Navbar lang={lang} />
         <main className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-center gap-4 mb-10">
@@ -586,7 +636,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
               <Skeleton className="w-40 h-4" />
             </div>
           </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
             {Array.from({ length: 6 }).map((_, i) => (
               <Skeleton key={i} className="h-28 rounded-2xl" />
             ))}
@@ -603,7 +653,7 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-midnight">
+      <div className="min-h-screen bg-graphite">
         <Navbar lang={lang} />
         <main className="max-w-3xl mx-auto px-4 py-20 text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-red-500/15 border border-red-500/20 flex items-center justify-center">
@@ -619,28 +669,37 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
   }
 
   const statItems = [
-    { label: "Total Users", value: users.length, color: "text-violet", variant: "violet" as const, icon: "users" },
-    { label: "Active", value: activeUsers.length, color: "text-green-500", variant: "green" as const, icon: "active" },
-    { label: "Pending Verifications", value: pendingVerifications.length, color: "text-yellow-500", variant: "amber" as const, icon: "pending" },
-    { label: "Active Reports", value: activeReports.length, color: "text-red-500", variant: "violet" as const, icon: "reports" },
-    { label: "Momentum Avg", value: avgMomentum, color: "text-cyan", variant: "cyan" as const, icon: "momentum" },
-    { label: "Health", value: systemHealth, color: systemHealth >= 90 ? "text-green-500" : systemHealth >= 70 ? "text-yellow-500" : "text-red-500", variant: systemHealth >= 90 ? "green" as const : systemHealth >= 70 ? "amber" as const : "violet" as const, icon: "health", suffix: "%" },
+    { label: "Total Users", value: users.length, accent: "violet" as const },
+    { label: "Active", value: activeUsers.length, accent: "green" as const },
+    { label: "Pending Verifications", value: pendingVerifications.length, accent: "amber" as const },
+    { label: "Active Reports", value: activeReports.length, accent: "red" as const },
+    { label: "Avg Momentum", value: avgMomentum, accent: "cyan" as const },
+    { label: "System Health", value: systemHealth, accent: "health" as const, suffix: "%" },
   ];
 
+  const statAccentMap: Record<string, { text: string; bg: string; border: string; bar: string }> = {
+    violet: { text: "text-violet", bg: "bg-violet/10", border: "border-violet/20", bar: "bg-violet" },
+    green: { text: "text-green-500", bg: "bg-green-500/10", border: "border-green-500/20", bar: "bg-green-500" },
+    amber: { text: "text-yellow-500", bg: "bg-yellow-500/10", border: "border-yellow-500/20", bar: "bg-yellow-500" },
+    red: { text: "text-red-500", bg: "bg-red-500/10", border: "border-red-500/20", bar: "bg-red-500" },
+    cyan: { text: "text-cyan", bg: "bg-cyan/10", border: "border-cyan/20", bar: "bg-cyan" },
+    health: { text: "text-violet", bg: "bg-violet/10", border: "border-violet/20", bar: "bg-violet" },
+  };
+
   return (
-    <div className="min-h-screen bg-midnight">
+    <div className="min-h-screen bg-graphite">
       <Navbar lang={lang} />
 
       <AnimatePresence>
         {showToast && (
           <motion.div
-            initial={{ opacity: 0, x: 100, scale: 0.9 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 100, scale: 0.9 }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 100 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="fixed top-4 right-4 z-50"
           >
-            <div className="px-4 py-2.5 rounded-xl bg-midnight3 border border-glass-border backdrop-blur-xl shadow-2xl shadow-violet/5 flex items-center gap-2.5">
+            <div className="px-4 py-2.5 rounded-xl panel flex items-center gap-2.5 shadow-2xl">
               <svg className="w-4 h-4 text-cyan shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -653,20 +712,19 @@ export default function AdminPage({ params: { lang } }: { params: { lang: string
       <motion.main
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
-className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
       >
-        <motion.div variants={itemVariants} className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
             <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="w-12 h-12 rounded-xl bg-violet/15 border border-violet/20 flex items-center justify-center relative overflow-hidden"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="w-11 h-11 rounded-xl bg-violet/10 border border-violet/20 flex items-center justify-center"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-violet/10 to-transparent" />
-              <svg className="w-6 h-6 text-violet relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              <svg className="w-5 h-5 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
               </svg>
             </motion.div>
             <div>
@@ -677,12 +735,12 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                     <span className="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-75" />
                     <span className="relative rounded-full w-1.5 h-1.5 bg-green-500" />
                   </span>
-                  <span className="text-[9px] font-semibold text-green-500 uppercase tracking-widest">Live</span>
+                  <span className="text-[9px] font-semibold text-green-500 uppercase tracking-widest">System Online</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className="text-xs text-slate-muted font-mono">
-                  Last updated: {lastUpdated.toLocaleTimeString()}
+                  Last sync: {lastUpdated.toLocaleTimeString()}
                 </span>
                 <button onClick={fetchAll} className="p-1 rounded-md hover:bg-white/5 transition-colors">
                   <svg className="w-3.5 h-3.5 text-slate-muted hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -696,8 +754,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
               </div>
             </div>
           </div>
-          <LiveMetric label="System Uptime" value={99.8} format="percent" trend="up" />
-        </motion.div>
+        </div>
 
         <AnimatePresence>
           {error && (
@@ -705,6 +762,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               className="mb-6 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center gap-2.5"
             >
               <svg className="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -721,83 +779,86 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
         <motion.div
           initial="hidden"
           animate="visible"
-          variants={{
-            hidden: {},
-            visible: { transition: { staggerChildren: 0.05 } },
-          }}
+          variants={staggerContainer}
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8"
         >
-          {statItems.map((s) => (
-            <motion.div key={s.label} variants={kpiVariants}>
-              <HolographicCard variant={s.variant} className="text-center p-3">
-                <AnimatedCounter to={s.value} className={`text-3xl font-bold ${s.color} font-mono tracking-tight`} suffix={s.suffix || ""} />
-                <div className="text-[10px] text-slate-muted uppercase tracking-widest mt-1">{s.label}</div>
-              </HolographicCard>
-            </motion.div>
-          ))}
+          {statItems.map((s) => {
+            const a = statAccentMap[s.accent === "health" && systemHealth >= 90 ? "green" : s.accent === "health" && systemHealth >= 70 ? "amber" : s.accent === "health" ? "red" : s.accent];
+            return (
+              <motion.div key={s.label} variants={statCardAnim}>
+                <div className="panel p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={`w-6 h-6 rounded-lg ${a.bg} border ${a.border} flex items-center justify-center`}>
+                      <div className={`w-1.5 h-1.5 rounded-full ${a.text} ${s.accent === "green" || (s.accent === "health" && systemHealth >= 90) ? "animate-pulse-dot" : ""}`} />
+                    </div>
+                    <span className="text-executive">{s.label}</span>
+                  </div>
+                  <AnimatedCounter
+                    to={s.value}
+                    className={`text-2xl font-light text-white tracking-tight`}
+                    suffix={s.suffix || ""}
+                  />
+                </div>
+              </motion.div>
+            );
+          })}
         </motion.div>
 
-        <motion.div variants={itemVariants} className="overflow-x-auto mb-6">
+        <div className="mb-6">
           <TabBar tabs={TABS} active={tab} onChange={(k) => setTab(k as AdminTab)} />
-        </motion.div>
+        </div>
 
         <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] as const }}
-          >
+          <motion.div key={tab} {...tabContentAnim}>
             {tab === "dashboard" && (
               <motion.div
-                variants={containerVariants}
+                variants={staggerContainer}
                 initial="hidden"
                 animate="visible"
                 className="space-y-6"
               >
-                <div className="grid grid-cols-2 gap-6">
-                  <motion.div variants={itemVariants}>
-                    <HolographicCard variant="violet">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <motion.div variants={fadeSlideUp}>
+                    <div className="panel p-5">
                       <div className="flex items-center gap-2 mb-5">
                         <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5" />
                         </svg>
-                        <h3 className="text-sm font-bold text-white">System Overview</h3>
+                        <h3 className="text-sm font-semibold text-white">System Overview</h3>
                       </div>
                       <div className="space-y-1">
-                        <div className="flex justify-between items-center py-2.5 border-b border-slate-border">
+                        <div className="flex justify-between items-center py-2.5 border-b border-graphite-800/60">
                           <span className="text-xs text-slate-muted">Dreamers</span>
                           <div className="flex items-center gap-3">
                             <div className="w-24 h-1.5 rounded-full bg-white/5 overflow-hidden">
-                              <div className="h-full rounded-full bg-violet transition-all" style={{ width: `${users.length > 0 ? (dreamers.length / users.length) * 100 : 0}%` }} />
+                              <div className="h-full rounded-full bg-violet transition-all duration-700" style={{ width: `${users.length > 0 ? (dreamers.length / users.length) * 100 : 0}%` }} />
                             </div>
                             <span className="text-xs font-mono text-white font-medium w-16 text-right"><AnimatedCounter to={dreamers.length} /></span>
                           </div>
                         </div>
-                        <div className="flex justify-between items-center py-2.5 border-b border-slate-border">
+                        <div className="flex justify-between items-center py-2.5 border-b border-graphite-800/60">
                           <span className="text-xs text-slate-muted">Investors</span>
                           <div className="flex items-center gap-3">
                             <div className="w-24 h-1.5 rounded-full bg-white/5 overflow-hidden">
-                              <div className="h-full rounded-full bg-cyan transition-all" style={{ width: `${users.length > 0 ? (investors.length / users.length) * 100 : 0}%` }} />
+                              <div className="h-full rounded-full bg-cyan transition-all duration-700" style={{ width: `${users.length > 0 ? (investors.length / users.length) * 100 : 0}%` }} />
                             </div>
                             <span className="text-xs font-mono text-white font-medium w-16 text-right"><AnimatedCounter to={investors.length} /></span>
                           </div>
                         </div>
-                        <div className="flex justify-between items-center py-2.5 border-b border-slate-border">
+                        <div className="flex justify-between items-center py-2.5 border-b border-graphite-800/60">
                           <span className="text-xs text-slate-muted">Admins</span>
                           <div className="flex items-center gap-3">
                             <div className="w-24 h-1.5 rounded-full bg-white/5 overflow-hidden">
-                              <div className="h-full rounded-full bg-amber-500 transition-all" style={{ width: `${users.length > 0 ? (admins.length / users.length) * 100 : 0}%` }} />
+                              <div className="h-full rounded-full bg-yellow-500 transition-all duration-700" style={{ width: `${users.length > 0 ? (admins.length / users.length) * 100 : 0}%` }} />
                             </div>
                             <span className="text-xs font-mono text-white font-medium w-16 text-right"><AnimatedCounter to={admins.length} /></span>
                           </div>
                         </div>
-                        <div className="flex justify-between items-center py-2.5 border-b border-slate-border">
+                        <div className="flex justify-between items-center py-2.5 border-b border-graphite-800/60">
                           <span className="text-xs text-slate-muted">Verified Users</span>
                           <span className="text-xs font-mono text-cyan font-medium"><AnimatedCounter to={verifiedUsers.length} /></span>
                         </div>
-                        <div className="flex justify-between items-center py-2.5 border-b border-slate-border">
+                        <div className="flex justify-between items-center py-2.5 border-b border-graphite-800/60">
                           <span className="text-xs text-slate-muted">Resolution Rate</span>
                           <span className={`text-xs font-mono font-medium ${resolutionRate >= 80 ? "text-green-500" : resolutionRate >= 50 ? "text-yellow-500" : "text-red-500"}`}>
                             <AnimatedCounter to={resolutionRate} suffix="%" />
@@ -808,29 +869,29 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                           <span className="text-xs font-mono text-yellow-500 font-medium"><AnimatedCounter to={activeReports.length} /></span>
                         </div>
                       </div>
-                    </HolographicCard>
+                    </div>
                   </motion.div>
 
-                  <motion.div variants={itemVariants}>
-                    <HolographicCard variant="violet">
+                  <motion.div variants={fadeSlideUp}>
+                    <div className="panel p-5">
                       <div className="flex items-center gap-2 mb-5">
                         <svg className="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <h3 className="text-sm font-bold text-white">Recent Activity Feed</h3>
+                        <h3 className="text-sm font-semibold text-white">Recent Activity</h3>
                         <div className="ml-auto flex items-center gap-1.5">
                           <span className="relative flex w-1.5 h-1.5">
                             <span className="absolute inset-0 rounded-full bg-cyan animate-ping opacity-75" />
                             <span className="relative rounded-full w-1.5 h-1.5 bg-cyan" />
                           </span>
-                          <span className="text-[9px] text-cyan font-mono uppercase tracking-widest">Realtime</span>
+                          <span className="text-[9px] text-cyan font-mono uppercase tracking-widest">Live</span>
                         </div>
                       </div>
                       <div className="space-y-1">
                         {activityFeed.map((event, idx) => (
                           <div
                             key={event.id}
-                            className="flex items-start gap-3 py-2.5 border-b border-slate-border last:border-0 group hover:bg-white/[0.02] -mx-1 px-1 rounded-lg transition-colors"
+                            className="flex items-start gap-3 py-2.5 border-b border-graphite-800/60 last:border-0 group hover:bg-white/[0.02] -mx-1 px-1 rounded-lg transition-colors duration-300"
                           >
                             <div className="relative mt-1.5">
                               <div
@@ -847,7 +908,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                                 }`}
                               />
                               {idx < activityFeed.length - 1 && (
-                                <div className="absolute top-3 left-1 w-px h-[calc(100%+4px)] bg-slate-border" />
+                                <div className="absolute top-3 left-1 w-px h-[calc(100%+4px)] bg-graphite-800/60" />
                               )}
                             </div>
                             <div className="flex-1 min-w-0">
@@ -859,8 +920,8 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                               <p className="text-xs text-slate-muted mt-0.5 leading-relaxed">{event.detail}</p>
                             </div>
                             <Badge label={event.type} color={
-                              event.type === "signup" ? "#8B5CF6" :
-                              event.type === "verification" ? "#06B6D4" :
+                              event.type === "signup" ? "#818cf8" :
+                              event.type === "verification" ? "#14b8a6" :
                               event.type === "report" ? "#F59E0B" :
                               event.type === "dispute" ? "#EF4444" : "#22C55E"
                             } size="sm" variant="outline" />
@@ -868,7 +929,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                         ))}
                         {activityFeed.length === 0 && (
                           <div className="text-center py-8">
-                            <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-white/5 flex items-center justify-center">
+                            <div className="w-10 h-10 mx-auto mb-3 rounded-lg panel flex items-center justify-center">
                               <svg className="w-5 h-5 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
@@ -877,43 +938,43 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                           </div>
                         )}
                       </div>
-                    </HolographicCard>
+                    </div>
                   </motion.div>
                 </div>
 
-                <motion.div variants={itemVariants}>
-                  <HolographicCard variant="violet">
+                <motion.div variants={fadeSlideUp}>
+                  <div className="panel p-5">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
                         </svg>
-                        <h3 className="text-sm font-bold text-white">Quick Actions</h3>
+                        <h3 className="text-sm font-semibold text-white">Quick Actions</h3>
                       </div>
                       <div className="flex items-center gap-2">
-                        <MagneticButton variant="secondary" size="sm" onClick={() => showMessage("Broadcast composer opened")}>
+                        <GlowButton variant="secondary" size="sm" onClick={() => showMessage("Broadcast composer opened")}>
                           Broadcast Message
-                        </MagneticButton>
-                        <MagneticButton
+                        </GlowButton>
+                        <GlowButton
                           variant={maintenanceFlag?.enabled ? "danger" : "secondary"}
                           size="sm"
                           onClick={toggleMaintenance}
                         >
                           {maintenanceFlag?.enabled ? "Disable Maintenance" : "Toggle Maintenance"}
-                        </MagneticButton>
-                        <MagneticButton variant="primary" size="sm" onClick={runSystemCheck}>
+                        </GlowButton>
+                        <GlowButton variant="primary" size="sm" onClick={runSystemCheck}>
                           System Check
-                        </MagneticButton>
+                        </GlowButton>
                       </div>
                     </div>
-                  </HolographicCard>
+                  </div>
                 </motion.div>
               </motion.div>
             )}
 
             {tab === "user-matrix" && (
-              <GlassCard variant="dark" className="overflow-hidden">
-                <div className="p-4 border-b border-slate-border">
+              <div className="panel overflow-hidden">
+                <div className="p-4 border-b border-graphite-800/60">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <div className="relative flex-1">
                       <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -924,13 +985,13 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search by handle, email, or ID..."
-                        className="w-full pl-9 pr-3 py-2 rounded-lg bg-black/10 border border-slate-border text-xs text-white placeholder:text-slate-muted focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all font-mono"
+                        className="w-full pl-9 pr-3 py-2 rounded-lg bg-black/20 border border-graphite-800/60 text-xs text-white placeholder:text-slate-muted focus:outline-none focus:ring-1 focus:ring-violet/40 transition-all font-mono"
                       />
                     </div>
                     <select
                       value={roleFilter}
                       onChange={(e) => setRoleFilter(e.target.value)}
-                      className="px-3 py-2 rounded-lg bg-black/10 border border-slate-border text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-violet/40"
+                      className="px-3 py-2 rounded-lg bg-black/20 border border-graphite-800/60 text-[11px] text-white focus:outline-none focus:ring-1 focus:ring-violet/40"
                     >
                       <option value="all">All Roles</option>
                       <option value="dreamer">Dreamer</option>
@@ -939,7 +1000,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                     <select
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
-                      className="px-3 py-2 rounded-lg bg-black/10 border border-slate-border text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-violet/40"
+                      className="px-3 py-2 rounded-lg bg-black/20 border border-graphite-800/60 text-[11px] text-white focus:outline-none focus:ring-1 focus:ring-violet/40"
                     >
                       <option value="all">All Status</option>
                       <option value="active">Active</option>
@@ -950,7 +1011,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                     <select
                       value={verificationFilter}
                       onChange={(e) => setVerificationFilter(e.target.value)}
-                      className="px-3 py-2 rounded-lg bg-black/10 border border-slate-border text-[11px] text-white focus:outline-none focus:ring-2 focus:ring-violet/40"
+                      className="px-3 py-2 rounded-lg bg-black/20 border border-graphite-800/60 text-[11px] text-white focus:outline-none focus:ring-1 focus:ring-violet/40"
                     >
                       <option value="all">All Verification</option>
                       <option value="verified">Verified</option>
@@ -966,23 +1027,23 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                 <div className="overflow-x-auto">
                   <table className="w-full min-w-[700px] text-xs">
                     <thead>
-                      <tr className="border-b border-slate-border">
-                        <th className="text-left py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Avatar / Handle</th>
-                        <th className="text-left py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Email</th>
-                        <th className="text-left py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Role</th>
-                        <th className="text-left py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Status</th>
-                        <th className="text-left py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Verified</th>
-                        <th className="text-left py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Verification Scale</th>
-                        <th className="text-left py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Momentum</th>
-                        <th className="text-right py-3 px-4 text-[9px] font-semibold text-slate-muted uppercase tracking-widest">Actions</th>
+                      <tr className="border-b border-graphite-800/60">
+                        <th className="text-left py-3 px-4 text-executive">Avatar / Handle</th>
+                        <th className="text-left py-3 px-4 text-executive">Email</th>
+                        <th className="text-left py-3 px-4 text-executive">Role</th>
+                        <th className="text-left py-3 px-4 text-executive">Status</th>
+                        <th className="text-left py-3 px-4 text-executive">Verified</th>
+                        <th className="text-left py-3 px-4 text-executive">Scale</th>
+                        <th className="text-left py-3 px-4 text-executive">Momentum</th>
+                        <th className="text-right py-3 px-4 text-executive">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredUsers.map((u) => (
-                        <tr key={u.id} className="border-b border-slate-border last:border-0 hover:bg-white/[0.02] transition-colors">
+                        <tr key={u.id} className="border-b border-graphite-800/60 last:border-0 hover:bg-white/[0.02] transition-colors duration-200">
                           <td className="py-3 px-4">
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet/20 to-cyan/20 border border-slate-border flex items-center justify-center overflow-hidden shrink-0">
+                              <div className="w-7 h-7 rounded-lg bg-graphite-800/60 border border-graphite-800/60 flex items-center justify-center overflow-hidden shrink-0">
                                 {u.avatar ? (
                                   <img src={u.avatar} alt="" className="w-full h-full object-cover" />
                                 ) : (
@@ -1002,12 +1063,12 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                               </div>
                             </div>
                           </td>
-                          <td className="py-3 px-4 text-slate-muted font-mono text-[10px]">{u.email || "—"}</td>
+                          <td className="py-3 px-4 text-slate-muted font-mono text-[10px] max-w-[140px] truncate">{u.email || "—"}</td>
                           <td className="py-3 px-4">
                             <select
                               value={u.role}
                               onChange={(e) => handleRoleChange(u.id, e.target.value)}
-                              className="text-[10px] bg-transparent border border-slate-border rounded-lg px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all cursor-pointer hover:border-violet/40"
+                              className="text-[10px] bg-transparent border border-graphite-800/60 rounded-lg px-2 py-1 text-white focus:outline-none focus:ring-1 focus:ring-violet/40 transition-all cursor-pointer hover:border-violet/40"
                             >
                               <option value="dreamer">dreamer</option>
                               <option value="investor">investor</option>
@@ -1024,7 +1085,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                                     : u.status === "banned"
                                       ? "#EF4444"
                                       : u.status === "frozen"
-                                        ? "#06B6D4"
+                                        ? "#14b8a6"
                                         : "#6B7280"
                               }
                               size="sm"
@@ -1047,7 +1108,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                             <select
                               value={u.verifiedScale || "none"}
                               onChange={(e) => handleScaleChange(u.id, e.target.value)}
-                              className="text-[10px] bg-transparent border border-slate-border rounded-lg px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all cursor-pointer hover:border-violet/40"
+                              className="text-[10px] bg-transparent border border-graphite-800/60 rounded-lg px-2 py-1 text-white focus:outline-none focus:ring-1 focus:ring-violet/40 transition-all cursor-pointer hover:border-violet/40"
                             >
                               <option value="none">none</option>
                               <option value="basic">basic</option>
@@ -1113,7 +1174,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                 </div>
                 {filteredUsers.length === 0 && (
                   <div className="text-center py-12">
-                    <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-white/5 flex items-center justify-center">
+                    <div className="w-10 h-10 mx-auto mb-3 rounded-lg panel flex items-center justify-center">
                       <svg className="w-5 h-5 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                       </svg>
@@ -1121,7 +1182,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                     <p className="text-xs text-slate-muted">No users match your filters</p>
                   </div>
                 )}
-              </GlassCard>
+              </div>
             )}
 
             {tab === "verification-pipeline" && (
@@ -1140,10 +1201,10 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                 {verifications.filter((v) => v.status === "pending").map((v) => {
                   const targetUser = users.find((u) => u.id === v.user_id);
                   return (
-                    <GlassCard key={v.id} variant="dark" className="group hover:border-violet/20 transition-all duration-300">
+                    <div key={v.id} className="panel-hover p-4">
                       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                         <div className="flex items-start gap-4">
-                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet/20 to-cyan/20 border border-slate-border flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 rounded-xl bg-graphite-800/60 border border-graphite-800/60 flex items-center justify-center shrink-0">
                             <span className="text-sm font-bold text-violet font-mono">
                               {(v.handle || "?").charAt(0).toUpperCase()}
                             </span>
@@ -1151,7 +1212,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                           <div>
                             <div className="flex items-center gap-2 mb-1.5">
                               <span className="text-sm font-semibold text-white">@{v.handle || "unknown"}</span>
-                              <Badge label={v.document_type} color="#8B5CF6" size="sm" />
+                              <Badge label={v.document_type} color="#818cf8" size="sm" />
                               <Badge label={v.status} color="#F59E0B" size="sm" variant="outline" />
                             </div>
                             <p className="text-[11px] text-slate-muted font-mono">
@@ -1164,11 +1225,11 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                             )}
                             {targetUser && (
                               <div className="mt-3 flex items-center gap-2">
-                                <span className="text-[10px] text-slate-muted uppercase tracking-wider">Approve scale:</span>
+                                <span className="text-executive">Approve scale:</span>
                                 <select
                                   value={scaleSelector[v.user_id] || "verified"}
                                   onChange={(e) => setScaleSelector((p) => ({ ...p, [v.user_id]: e.target.value }))}
-                                  className="text-[10px] bg-transparent border border-slate-border rounded-lg px-2 py-1 text-white focus:outline-none focus:ring-2 focus:ring-violet/40 cursor-pointer"
+                                  className="text-[10px] bg-transparent border border-graphite-800/60 rounded-lg px-2 py-1 text-white focus:outline-none focus:ring-1 focus:ring-violet/40 cursor-pointer"
                                 >
                                   <option value="basic">basic</option>
                                   <option value="verified">verified</option>
@@ -1178,28 +1239,28 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                             )}
                           </div>
                         </div>
-                          <div className="flex items-center gap-2 sm:ml-4">
-                            <MagneticButton
-                              variant="primary"
-                              size="sm"
-                              onClick={() => handleVerifyRequest(v.id, v.user_id, true, scaleSelector[v.user_id] || "verified")}
-                            >
-                              Approve
-                            </MagneticButton>
-                          <MagneticButton
+                        <div className="flex items-center gap-2 sm:ml-4">
+                          <GlowButton
+                            variant="primary"
+                            size="sm"
+                            onClick={() => handleVerifyRequest(v.id, v.user_id, true, scaleSelector[v.user_id] || "verified")}
+                          >
+                            Approve
+                          </GlowButton>
+                          <GlowButton
                             variant="danger"
                             size="sm"
                             onClick={() => handleVerifyRequest(v.id, v.user_id, false)}
                           >
                             Reject
-                          </MagneticButton>
+                          </GlowButton>
                         </div>
                       </div>
-                    </GlassCard>
+                    </div>
                   );
                 })}
                 {verifications.filter((v) => v.status === "approved").slice(0, 3).map((v) => (
-                  <GlassCard key={v.id} variant="dark" className="opacity-60 hover:opacity-100 transition-opacity">
+                  <div key={v.id} className="panel p-4 opacity-60 hover:opacity-100 transition-opacity duration-300">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
                       <div className="w-8 h-8 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center">
                         <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -1214,33 +1275,29 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                       </div>
                       <div className="sm:ml-auto"><Badge label="approved" color="#22C55E" size="sm" variant="outline" /></div>
                     </div>
-                  </GlassCard>
+                  </div>
                 ))}
                 {verifications.length === 0 && (
-                  <GlassCard variant="dark">
-                    <div className="text-center py-12">
-                      <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/5 border border-slate-border flex items-center justify-center">
-                        <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <p className="text-sm text-slate-muted font-medium">No verification requests</p>
-                      <p className="text-[10px] text-slate-muted mt-1 font-mono">The queue is empty</p>
+                  <div className="panel p-8 text-center">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-graphite-800/60 border border-graphite-800/60 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                     </div>
-                  </GlassCard>
+                    <p className="text-sm text-slate-muted font-medium">No verification requests</p>
+                    <p className="text-[10px] text-slate-muted mt-1 font-mono">The queue is empty</p>
+                  </div>
                 )}
                 {verifications.length > 0 && verifications.filter((v) => v.status === "pending").length === 0 && (
-                  <GlassCard variant="dark">
-                    <div className="text-center py-8">
-                      <div className="w-10 h-10 mx-auto mb-3 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <p className="text-sm text-slate-muted font-medium">All caught up</p>
-                      <p className="text-[10px] text-slate-muted mt-1 font-mono">No pending verification requests</p>
+                  <div className="panel p-8 text-center">
+                    <div className="w-10 h-10 mx-auto mb-3 rounded-lg bg-green-500/10 border border-green-500/20 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                     </div>
-                  </GlassCard>
+                    <p className="text-sm text-slate-muted font-medium">All caught up</p>
+                    <p className="text-[10px] text-slate-muted mt-1 font-mono">No pending verification requests</p>
+                  </div>
                 )}
               </div>
             )}
@@ -1253,11 +1310,11 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                       <svg className="w-4 h-4 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                       </svg>
-                      <h3 className="text-xs font-bold text-white uppercase tracking-wider">Under Review</h3>
+                      <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Under Review</h3>
                       <Badge label={underReviewDisputes.length.toString()} color="#F59E0B" size="sm" />
                     </div>
                     {underReviewDisputes.map((d) => (
-                      <GlassCard key={d.id} variant="dark" className="mb-3 group hover:border-red-500/20 transition-all duration-300">
+                      <div key={d.id} className="panel-hover p-4">
                         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
@@ -1298,7 +1355,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                             </MagneticButton>
                           </div>
                         </div>
-                      </GlassCard>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -1308,11 +1365,11 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                     <svg className="w-4 h-4 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776" />
                     </svg>
-                    <h3 className="text-xs font-bold text-slate-muted uppercase tracking-wider">All Disputes</h3>
+                    <h3 className="text-xs font-semibold text-slate-muted uppercase tracking-wider">All Disputes</h3>
                     <Badge label={disputes.length.toString()} color="#6B7280" size="sm" variant="outline" />
                   </div>
                   {disputes.map((d) => (
-                    <GlassCard key={d.id} variant="dark" className="mb-2 opacity-70 hover:opacity-100 transition-all duration-200">
+                    <div key={d.id} className="panel p-3 mb-2 opacity-70 hover:opacity-100 transition-all duration-200">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex items-center gap-3 min-w-0">
                           <div className={`w-2 h-2 rounded-full shrink-0 ${
@@ -1337,20 +1394,18 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                           <span className="text-[10px] text-slate-muted font-mono">{formatRelativeTime(d.created_at)}</span>
                         </div>
                       </div>
-                    </GlassCard>
+                    </div>
                   ))}
                   {disputes.length === 0 && (
-                    <GlassCard variant="dark">
-                      <div className="text-center py-12">
-                        <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/5 border border-slate-border flex items-center justify-center">
-                          <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                          </svg>
-                        </div>
-                        <p className="text-sm text-slate-muted font-medium">No disputes</p>
-                        <p className="text-[10px] text-slate-muted mt-1 font-mono">The system is clear</p>
+                    <div className="panel p-8 text-center">
+                      <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-graphite-800/60 border border-graphite-800/60 flex items-center justify-center">
+                        <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                        </svg>
                       </div>
-                    </GlassCard>
+                      <p className="text-sm text-slate-muted font-medium">No disputes</p>
+                      <p className="text-[10px] text-slate-muted mt-1 font-mono">The system is clear</p>
+                    </div>
                   )}
                 </div>
               </div>
@@ -1363,21 +1418,21 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                     <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                     </svg>
-                    <h3 className="text-xs font-bold text-white uppercase tracking-wider">Recent Posts</h3>
+                    <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Recent Posts</h3>
                     <span className="text-[10px] text-slate-muted font-mono">Last 20</span>
                   </div>
                 </div>
                 {adminPosts.map((post) => (
-                  <GlassCard key={post.id} variant="dark" className="group hover:border-violet/20 transition-all duration-300">
+                  <div key={post.id} className="panel-hover p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1.5">
-                          <Badge label={post.type} color={post.type === "dreamer" ? "#8B5CF6" : "#06B6D4"} size="sm" />
+                          <Badge label={post.type} color={post.type === "dreamer" ? "#818cf8" : "#14b8a6"} size="sm" />
                           {post.dispute_status && post.dispute_status !== "none" && (
                             <Badge label={`Dispute: ${post.dispute_status}`} color="#EF4444" size="sm" variant="outline" />
                           )}
                           {post.visibility === "hidden" && (
-                            <Badge label="HIDDEN" color="#6B7280" size="sm" variant="glow" />
+                            <Badge label="HIDDEN" color="#6B7280" size="sm" variant="outline" />
                           )}
                         </div>
                         <p className="text-sm font-semibold text-white truncate">{post.title}</p>
@@ -1391,47 +1446,45 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                         </div>
                       </div>
                       <div className="flex items-center gap-2 ml-4 shrink-0">
-                        <MagneticButton variant="danger" size="sm" onClick={() => handlePostDelete(post.id)}>
+                        <GlowButton variant="danger" size="sm" onClick={() => handlePostDelete(post.id)}>
                           Delete
-                        </MagneticButton>
-                        <MagneticButton
+                        </GlowButton>
+                        <GlowButton
                           variant={post.visibility === "hidden" ? "secondary" : "ghost"}
                           size="sm"
                           onClick={() => handlePostHide(post.id, post.visibility !== "hidden")}
                         >
                           {post.visibility === "hidden" ? "Show" : "Hide"}
-                        </MagneticButton>
+                        </GlowButton>
                       </div>
                     </div>
-                  </GlassCard>
+                  </div>
                 ))}
                 {adminPosts.length === 0 && (
-                  <GlassCard variant="dark">
-                    <div className="text-center py-12">
-                      <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/5 border border-slate-border flex items-center justify-center">
-                        <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 013.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                        </svg>
-                      </div>
-                      <p className="text-sm text-slate-muted font-medium">No posts found</p>
-                      <p className="text-[10px] text-slate-muted mt-1 font-mono">The content feed is empty</p>
+                  <div className="panel p-8 text-center">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-graphite-800/60 border border-graphite-800/60 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 013.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                      </svg>
                     </div>
-                  </GlassCard>
+                    <p className="text-sm text-slate-muted font-medium">No posts found</p>
+                    <p className="text-[10px] text-slate-muted mt-1 font-mono">The content feed is empty</p>
+                  </div>
                 )}
               </div>
             )}
 
             {tab === "infrastructure-switchboard" && (
               <div className="space-y-4">
-                <HolographicCard variant="violet">
+                <div className="panel p-5">
                   <div className="flex items-center gap-2 mb-5">
                     <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
                     </svg>
-                    <h3 className="text-sm font-bold text-white">Infrastructure Controls</h3>
+                    <h3 className="text-sm font-semibold text-white">Infrastructure Controls</h3>
                   </div>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.03] border border-slate-border hover:border-violet/20 transition-all">
+                    <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-black/20 border border-graphite-800/60 hover:border-violet/20 transition-all duration-300">
                       <div>
                         <span className="text-sm font-medium text-white">Maintenance Mode</span>
                         <p className="text-[10px] text-slate-muted mt-0.5 font-mono">
@@ -1447,11 +1500,11 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                           checked={maintenanceFlag?.enabled || false}
                           onChange={() => maintenanceFlag && toggleFlag("maintenance_mode", maintenanceFlag.enabled)}
                         />
-                        <div className="w-10 h-5 rounded-full bg-slate-border peer-checked:bg-violet cursor-pointer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all after:shadow-lg" />
+                        <div className="w-10 h-5 rounded-full bg-graphite-800/60 peer-checked:bg-violet cursor-pointer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all after:duration-300 after:shadow-lg" />
                       </label>
                     </div>
 
-                    <div className="py-3 px-4 rounded-xl bg-white/[0.03] border border-slate-border">
+                    <div className="py-3 px-4 rounded-xl bg-black/20 border border-graphite-800/60">
                       <span className="text-sm font-medium text-white">System Broadcast</span>
                       <div className="flex items-center gap-2 mt-2">
                         <input
@@ -1460,41 +1513,41 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                           onChange={(e) => setBroadcastText(e.target.value)}
                           onKeyDown={(e) => e.key === "Enter" && handleBroadcast()}
                           placeholder="Type broadcast message..."
-                          className="flex-1 px-3 py-2 rounded-lg bg-black/20 border border-slate-border text-xs text-white placeholder:text-slate-muted focus:outline-none focus:ring-2 focus:ring-violet/40 transition-all font-mono"
+                          className="flex-1 px-3 py-2 rounded-lg bg-black/20 border border-graphite-800/60 text-xs text-white placeholder:text-slate-muted focus:outline-none focus:ring-1 focus:ring-violet/40 transition-all font-mono"
                         />
-                        <MagneticButton variant="primary" size="sm" onClick={handleBroadcast} loading={broadcastSending}>
+                        <GlowButton variant="primary" size="sm" onClick={handleBroadcast} loading={broadcastSending}>
                           Send
-                        </MagneticButton>
+                        </GlowButton>
                       </div>
                     </div>
                   </div>
-                </HolographicCard>
+                </div>
 
-                <HolographicCard variant="violet">
+                <div className="panel p-5">
                   <div className="flex items-center gap-2 mb-5">
                     <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                     </svg>
-                    <h3 className="text-sm font-bold text-white">Performance Monitor</h3>
+                    <h3 className="text-sm font-semibold text-white">Performance Monitor</h3>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                    <div className="p-5 rounded-xl bg-white/[0.03] border border-slate-border text-center group hover:border-violet/20 transition-all">
-                      <div className="text-2xl font-bold text-violet font-mono">—</div>
-                      <div className="text-[10px] text-slate-muted uppercase tracking-widest mt-1">API Calls</div>
+                    <div className="panel p-4 text-center">
+                      <div className="text-2xl font-light text-violet font-mono">—</div>
+                      <div className="text-executive mt-1">API Calls</div>
                     </div>
-                    <div className="p-5 rounded-xl bg-white/[0.03] border border-slate-border text-center group hover:border-green-500/20 transition-all">
-                      <div className="text-2xl font-bold text-green-500 font-mono">0%</div>
-                      <div className="text-[10px] text-slate-muted uppercase tracking-widest mt-1">Error Rate</div>
+                    <div className="panel p-4 text-center">
+                      <div className="text-2xl font-light text-green-500 font-mono">0%</div>
+                      <div className="text-executive mt-1">Error Rate</div>
                     </div>
-                    <div className="p-5 rounded-xl bg-white/[0.03] border border-slate-border text-center group hover:border-cyan/20 transition-all">
-                      <div className={`text-2xl font-bold font-mono ${rateLimitingFlag?.enabled ? "text-cyan" : "text-yellow-500"}`}>
+                    <div className="panel p-4 text-center">
+                      <div className={`text-2xl font-light font-mono ${rateLimitingFlag?.enabled ? "text-cyan" : "text-yellow-500"}`}>
                         {rateLimitingFlag?.enabled ? "On" : "Off"}
                       </div>
-                      <div className="text-[10px] text-slate-muted uppercase tracking-widest mt-1">Rate Limiting</div>
+                      <div className="text-executive mt-1">Rate Limiting</div>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.03] border border-slate-border hover:border-cyan/20 transition-all">
+                    <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-black/20 border border-graphite-800/60 hover:border-cyan/20 transition-all duration-300">
                       <div>
                         <span className="text-sm font-medium text-white">Rate Limiting</span>
                         <p className="text-[10px] text-slate-muted mt-0.5 font-mono">
@@ -1508,37 +1561,193 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                           checked={rateLimitingFlag?.enabled || false}
                           onChange={() => rateLimitingFlag && toggleFlag("rate_limiting", rateLimitingFlag.enabled)}
                         />
-                        <div className="w-10 h-5 rounded-full bg-slate-border peer-checked:bg-cyan cursor-pointer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all after:shadow-lg" />
+                        <div className="w-10 h-5 rounded-full bg-graphite-800/60 peer-checked:bg-cyan cursor-pointer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all after:duration-300 after:shadow-lg" />
                       </label>
                     </div>
-                    <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-white/[0.03] border border-slate-border hover:border-violet/20 transition-all">
+                    <div className="flex items-center justify-between py-3 px-4 rounded-xl bg-black/20 border border-graphite-800/60 hover:border-violet/20 transition-all duration-300">
                       <div>
                         <span className="text-sm font-medium text-white">Cache</span>
                         <p className="text-[10px] text-slate-muted mt-0.5 font-mono">Clear all cached data and re-index</p>
                       </div>
-                      <MagneticButton variant="secondary" size="sm" onClick={handleClearCache} loading={cacheClearing}>
+                      <GlowButton variant="secondary" size="sm" onClick={handleClearCache} loading={cacheClearing}>
                         {cacheClearing ? "Clearing..." : "Clear Cache"}
-                      </MagneticButton>
+                      </GlowButton>
                     </div>
                   </div>
-                </HolographicCard>
+                </div>
+              </div>
+            )}
+
+            {tab === "payments" && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 mb-3 px-1">
+                  <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125V9M7.5 9.75h3m-6 0h3m-3 2.25h3m-3 2.25h3m-3 2.25h3" />
+                  </svg>
+                  <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Payment Queue</h3>
+                  <Badge label={invoices.filter((i) => i.status === "pending").length.toString()} color="#F59E0B" size="sm" />
+                </div>
+                {invoices.filter((i) => i.status === "pending").map((inv) => (
+                  <div key={inv.id} className="panel-hover p-4">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge label={inv.tier} color={inv.tier === "elite" ? "#14b8a6" : "#818cf8"} size="sm" />
+                          <Badge label={inv.status} color="#F59E0B" size="sm" variant="outline" />
+                          <span className="text-[10px] text-slate-muted font-mono">{inv.invoice_number}</span>
+                        </div>
+                        <p className="text-xs text-white font-medium">
+                          @{inv.profiles?.handle || "unknown"} — {inv.amount} {inv.currency}
+                        </p>
+                        <div className="flex items-center gap-3 mt-2">
+                          <span className="text-[10px] text-slate-muted font-mono">Due {new Date(inv.due_date).toLocaleDateString()}</span>
+                          {inv.receipt_url && (
+                            <a href={inv.receipt_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-cyan font-mono hover:underline">
+                              View Receipt ↗
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 sm:ml-4">
+                        <GlowButton variant="primary" size="sm" onClick={() => handleApprovePayment(inv.id, inv.user_id, inv.tier)}>
+                          Confirm Payment
+                        </GlowButton>
+                        <GlowButton variant="danger" size="sm" onClick={() => {
+                          supabase.from("invoices").update({ status: "cancelled" }).eq("id", inv.id).then(() => {
+                            setInvoices((prev) => prev.map((i) => i.id === inv.id ? { ...i, status: "cancelled" } : i));
+                            showMessage("Invoice cancelled");
+                          });
+                        }}>
+                          Cancel
+                        </GlowButton>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {invoices.filter((i) => i.status !== "pending").map((inv) => (
+                  <div key={inv.id} className="panel p-3 opacity-60 hover:opacity-100 transition-all">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Badge label={inv.status} color={inv.status === "paid" ? "#22C55E" : inv.status === "overdue" ? "#EF4444" : "#6B7280"} size="sm" variant="outline" />
+                        <span className="text-xs text-white font-medium font-mono">{inv.invoice_number}</span>
+                        <span className="text-xs text-slate-muted">@{inv.profiles?.handle || "?"}</span>
+                        <span className="text-[10px] text-slate-muted">{inv.amount} {inv.currency}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge label={inv.tier} color={inv.tier === "elite" ? "#14b8a6" : "#818cf8"} size="sm" />
+                        {inv.receipt_url && (
+                          <a href={inv.receipt_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-cyan font-mono hover:underline">Receipt ↗</a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {invoices.length === 0 && (
+                  <div className="panel p-8 text-center">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-graphite-800/60 border border-graphite-800/60 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125V9M7.5 9.75h3m-6 0h3m-3 2.25h3m-3 2.25h3m-3 2.25h3" />
+                      </svg>
+                    </div>
+                    <p className="text-sm text-slate-muted font-medium">No payments yet</p>
+                    <p className="text-[10px] text-slate-muted mt-1 font-mono">Waiting for concierge subscriptions</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {tab === "investor-kyc" && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2 mb-3 px-1">
+                  <svg className="w-4 h-4 text-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                  <h3 className="text-xs font-semibold text-white uppercase tracking-wider">Investor KYC Review</h3>
+                  <Badge label={investorKyc.filter((k) => k.investor_status === "pending").length.toString()} color="#F59E0B" size="sm" />
+                </div>
+                {investorKyc.filter((k) => k.investor_status === "pending").map((k) => (
+                  <div key={k.id} className="panel-hover p-4">
+                    <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-sm font-semibold text-white">@{k.profiles?.handle || "unknown"}</span>
+                          <Badge label="Pending Review" color="#F59E0B" size="sm" variant="outline" />
+                        </div>
+                        {k.linkedin_url && (
+                          <a href={k.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-[11px] text-cyan font-mono hover:underline block mb-1">
+                            LinkedIn Profile ↗
+                          </a>
+                        )}
+                        <div className="flex items-center gap-3 mt-2">
+                          {k.credential_url && (
+                            <a href={k.credential_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-violet font-mono hover:underline">
+                              View Credential ↗
+                            </a>
+                          )}
+                          {k.company_proof_url && (
+                            <a href={k.company_proof_url} target="_blank" rel="noopener noreferrer" className="text-[10px] text-violet font-mono hover:underline">
+                              View Company Proof ↗
+                            </a>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-slate-muted font-mono mt-2">
+                          Applied {formatRelativeTime(k.created_at)}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 sm:ml-4">
+                        <GlowButton variant="primary" size="sm" onClick={() => handleApproveInvestor(k.user_id)}>
+                          Approve
+                        </GlowButton>
+                        <GlowButton variant="danger" size="sm" onClick={() => handleRejectInvestor(k.user_id)}>
+                          Reject
+                        </GlowButton>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {investorKyc.length === 0 && (
+                  <div className="panel p-8 text-center">
+                    <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-graphite-800/60 border border-graphite-800/60 flex items-center justify-center">
+                      <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                      </svg>
+                    </div>
+                    <p className="text-sm text-slate-muted font-medium">No investor applications</p>
+                    <p className="text-[10px] text-slate-muted mt-1 font-mono">The investor queue is empty</p>
+                  </div>
+                )}
+                {investorKyc.filter((k) => k.investor_status !== "pending").length > 0 && (
+                  <div className="mt-6">
+                    <div className="flex items-center gap-2 mb-3 px-1">
+                      <span className="text-executive">Reviewed</span>
+                    </div>
+                    {investorKyc.filter((k) => k.investor_status !== "pending").map((k) => (
+                      <div key={k.id} className="panel p-3 mb-2 opacity-60 hover:opacity-100 transition-all">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-white font-medium">@{k.profiles?.handle || "?"}</span>
+                          <Badge label={k.investor_status} color={k.investor_status === "approved" ? "#22C55E" : "#EF4444"} size="sm" variant="outline" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
             {tab === "audit-log" && (
-              <GlassCard variant="dark">
+              <div className="panel p-5">
                 <div className="flex items-center gap-2 mb-5">
                   <svg className="w-4 h-4 text-violet" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                   </svg>
-                  <h3 className="text-sm font-bold text-white">Audit Log</h3>
-                  <div className="ml-auto"><Badge label={activityFeed.length.toString()} color="#8B5CF6" size="sm" variant="outline" /></div>
+                  <h3 className="text-sm font-semibold text-white">Audit Log</h3>
+                  <div className="ml-auto"><Badge label={activityFeed.length.toString()} color="#818cf8" size="sm" variant="outline" /></div>
                 </div>
                 <div className="space-y-0.5">
-                  {activityFeed.map((event, idx) => (
+                  {activityFeed.map((event) => (
                     <div
                       key={event.id}
-                      className="flex flex-wrap items-center gap-2 sm:gap-4 py-3 px-3 rounded-lg hover:bg-white/[0.02] transition-colors border-b border-slate-border last:border-0"
+                      className="flex flex-wrap items-center gap-2 sm:gap-4 py-3 px-3 rounded-lg hover:bg-white/[0.02] transition-colors duration-200 border-b border-graphite-800/60 last:border-0"
                     >
                       <span className="text-[10px] text-slate-muted font-mono w-16 shrink-0 tabular-nums">
                         {formatRelativeTime(event.timestamp)}
@@ -1546,8 +1755,8 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                       <Badge
                         label={event.type}
                         color={
-                          event.type === "signup" ? "#8B5CF6" :
-                          event.type === "verification" ? "#06B6D4" :
+                          event.type === "signup" ? "#818cf8" :
+                          event.type === "verification" ? "#14b8a6" :
                           event.type === "report" ? "#F59E0B" :
                           event.type === "dispute" ? "#EF4444" :
                           event.type === "ban" ? "#EF4444" :
@@ -1566,7 +1775,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                   ))}
                   {activityFeed.length === 0 && (
                     <div className="text-center py-12">
-                      <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-white/5 border border-slate-border flex items-center justify-center">
+                      <div className="w-12 h-12 mx-auto mb-3 rounded-xl bg-graphite-800/60 border border-graphite-800/60 flex items-center justify-center">
                         <svg className="w-6 h-6 text-slate-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg>
@@ -1576,7 +1785,7 @@ className="max-w-7xl mx-auto px-3 sm:px-6 py-8"
                     </div>
                   )}
                 </div>
-              </GlassCard>
+              </div>
             )}
           </motion.div>
         </AnimatePresence>

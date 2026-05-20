@@ -17,9 +17,9 @@ export function GlassCard({
 }: GlassCardProps) {
   const base =
     variant === "dark"
-      ? "bg-white dark:bg-midnight2 border border-slate-border"
+      ? "bg-graphite-900/60 border border-graphite-800/60"
       : variant === "accent"
-        ? "bg-glass-bg border"
+        ? "bg-graphite-900/40 border border-violet/20"
         : "bg-glass-bg border border-glass-border";
 
   const accentStyle = variant === "accent" && accentColor

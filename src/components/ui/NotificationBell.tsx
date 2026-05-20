@@ -67,8 +67,8 @@ export function NotificationBell({ lang }: { lang: string }) {
       </button>
 
       {open && (
-        <div className="absolute end-0 top-full mt-2 w-80 bg-white dark:bg-midnight2 border border-slate-border rounded-xl shadow-2xl shadow-black/20 z-50">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-border">
+        <div className="absolute end-0 top-full mt-2 w-80 bg-graphite-900 border border-graphite-800/60 rounded-xl shadow-2xl shadow-black/40 z-50">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-graphite-800/60">
             <span className="text-xs font-semibold text-slate-muted uppercase tracking-wider">{t("notification.title")}</span>
             {unreadCount > 0 && (
               <button onClick={markAllRead} className="text-[10px] font-semibold text-violet hover:text-violet-light transition-colors">
@@ -85,7 +85,7 @@ export function NotificationBell({ lang }: { lang: string }) {
                 <button
                   key={n.id}
                   onClick={() => markRead(n.id)}
-                  className={`w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-black/5 dark:hover:bg-white/5 transition-colors border-b border-slate-border last:border-0 ${
+                  className={`w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-white/5 transition-colors border-b border-graphite-800/60 last:border-0 ${
                     !n.read ? "bg-violet/5 dark:bg-violet/5" : ""
                   }`}
                 >

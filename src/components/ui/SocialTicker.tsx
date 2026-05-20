@@ -54,7 +54,7 @@ export function SocialTicker() {
   }, []);
 
   return (
-    <div className="relative overflow-hidden h-8 bg-gradient-to-r from-violet/5 via-cyan/5 to-violet/5 dark:from-violet/[0.03] dark:via-cyan/[0.03] dark:to-violet/[0.03] border-y border-slate-border">
+    <div className="relative overflow-hidden h-7 bg-graphite-900/40 border-y border-graphite-800/60">
       <div className="flex items-center h-full animate-marquee">
         <div className="flex items-center gap-8 px-4 whitespace-nowrap">
           {[...activities, ...activities, ...activities].map((a, i) => (

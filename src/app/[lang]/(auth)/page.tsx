@@ -48,6 +48,7 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
   const [submitting, setSubmitting] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
+  const [inviteCode, setInviteCode] = useState("");
   const feedRef = useRef<HTMLDivElement>(null);
 
   const supabase = createClient();
@@ -79,7 +80,14 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
-          options: { data: { username, name, role: "dreamer" } },
+          options: {
+            data: {
+              username,
+              name,
+              role: "dreamer",
+              ...(inviteCode ? { invite_code: inviteCode } : {}),
+            },
+          },
         });
         if (signUpError) throw signUpError;
         if (data.user) {
@@ -427,6 +435,18 @@ export default function AuthPage({ params: { lang } }: { params: { lang: string 
                         required
                       />
                     </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-muted uppercase tracking-wider mb-1.5">
+                      Invite Code (optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={inviteCode}
+                      onChange={(e) => setInviteCode(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/[0.08] text-white text-sm placeholder:text-slate-muted/40 focus:outline-none focus:ring-2 focus:ring-violet/40 focus:border-violet/40 transition-all font-mono"
+                      placeholder="STK-XXXX"
+                    />
                   </div>
                 </>
               )}

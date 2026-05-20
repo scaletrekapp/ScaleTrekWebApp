@@ -7,26 +7,31 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        midnight: "#050505",
-        midnight2: "#0A0A0A",
-        midnight3: "#111111",
-        "slate-base": "#1A1A1A",
-        "slate-light": "#2A2A2A",
-        "slate-border": "var(--border)",
-        "slate-muted": "#6B7280",
-        "slate-subtle": "#404040",
-        violet: { DEFAULT: "#8B5CF6", light: "#A78BFA", dark: "#7C3AED" },
-        cyan: { DEFAULT: "#06B6D4", light: "#22D3EE", dark: "#0891B2" },
-        glass: {
-          bg: "rgba(26,26,26,0.6)",
-          border: "rgba(255,255,255,0.08)",
-          light: "rgba(255,255,255,0.04)",
+        midnight: "#0a0a0f",
+        midnight2: "#12121a",
+        midnight3: "#1a1a24",
+        graphite: {
+          DEFAULT: "#0a0a0f",
+          50: "#f5f5f7",
+          100: "#e4e4e9",
+          200: "#c9c9d2",
+          300: "#a3a3b0",
+          400: "#7c7c8a",
+          500: "#5c5c6a",
+          600: "#4a4a56",
+          700: "#3a3a44",
+          800: "#2a2a34",
+          900: "#1a1a24",
+          950: "#0a0a0f",
         },
-        surface: {
-          DEFAULT: "#FFFFFF",
-          secondary: "#F9FAFB",
-          border: "#E5E7EB",
-          muted: "#9CA3AF",
+        "slate-border": "rgba(255,255,255,0.06)",
+        "slate-muted": "#8a8a96",
+        violet: { DEFAULT: "#6366f1", light: "#818cf8", dark: "#4f46e5" },
+        cyan: { DEFAULT: "#14b8a6", light: "#2dd4bf", dark: "#0d9488" },
+        glass: {
+          bg: "rgba(18,18,26,0.6)",
+          border: "rgba(255,255,255,0.06)",
+          light: "rgba(255,255,255,0.03)",
         },
       },
       fontFamily: {
@@ -36,15 +41,14 @@ module.exports = {
         logo: ["Space Grotesk", "system-ui", ...fontFamily.sans],
       },
       animation: {
-        "pulse-dot": "pulse-dot 2s ease-in-out infinite",
-        "pulse-slow": "pulse-slow 6s ease-in-out infinite",
-        "pulse-slower": "pulse-slower 10s ease-in-out infinite",
-        "count-up": "count-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        marquee: "marquee 40s linear infinite",
-        float: "float 6s ease-in-out infinite",
-        shimmer: "shimmer 2s linear infinite",
-        glow: "glow 3s ease-in-out infinite",
-        "drift-slow": "drift 20s ease-in-out infinite",
+        "pulse-dot": "pulse-dot 3s ease-in-out infinite",
+        "pulse-slow": "pulse-slow 8s ease-in-out infinite",
+        "pulse-slower": "pulse-slower 14s ease-in-out infinite",
+        "count-up": "count-up 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+        marquee: "marquee 60s linear infinite",
+        float: "float 8s ease-in-out infinite",
+        shimmer: "shimmer 3s linear infinite",
+        "drift-slow": "drift 30s ease-in-out infinite",
       },
       keyframes: {
         "pulse-dot": {
@@ -52,12 +56,12 @@ module.exports = {
           "50%": { opacity: 1, transform: "scale(1.4)" },
         },
         "pulse-slow": {
-          "0%, 100%": { opacity: 0.3, transform: "scale(1)" },
-          "50%": { opacity: 0.5, transform: "scale(1.05)" },
+          "0%, 100%": { opacity: 0.2 },
+          "50%": { opacity: 0.4 },
         },
         "pulse-slower": {
-          "0%, 100%": { opacity: 0.2, transform: "scale(1)" },
-          "50%": { opacity: 0.4, transform: "scale(1.08)" },
+          "0%, 100%": { opacity: 0.15 },
+          "50%": { opacity: 0.3 },
         },
         "count-up": {
           from: { opacity: "0", transform: "translateY(8px)" },
@@ -74,10 +78,6 @@ module.exports = {
         shimmer: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
-        },
-        glow: {
-          "0%, 100%": { boxShadow: "0 0 20px rgba(139,92,246,0.15)" },
-          "50%": { boxShadow: "0 0 40px rgba(139,92,246,0.3)" },
         },
         drift: {
           "0%, 100%": { transform: "translate(0, 0)" },

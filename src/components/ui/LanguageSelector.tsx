@@ -38,7 +38,7 @@ export function LanguageSelector() {
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="h-9 px-2.5 rounded-xl glass-dark dark:glass-dark border border-slate-border dark:border-slate-border flex items-center gap-1.5 text-xs font-medium text-slate-muted dark:text-slate-muted hover:brightness-125 transition-all"
+        className="h-9 px-2.5 rounded-xl bg-graphite-900/60 border border-graphite-800/60 flex items-center gap-1.5 text-xs font-medium text-slate-muted hover:bg-graphite-800/40 transition-all"
       >
         <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -46,15 +46,15 @@ export function LanguageSelector() {
         <span className="uppercase">{currentLang}</span>
       </button>
       {open && (
-        <div className="absolute top-full mt-1 left-0 w-36 bg-white dark:bg-midnight2 border border-slate-border rounded-xl overflow-hidden z-[100] shadow-2xl" role="menu">
+        <div className="absolute top-full mt-1 left-0 w-36 bg-graphite-900 border border-graphite-800/60 rounded-xl overflow-hidden z-[100] shadow-2xl" role="menu">
           {languages.map((lang) => (
             <button
               key={lang.code}
               onClick={() => switchLang(lang.code as LangCode)}
-              className={`w-full px-3 py-2.5 text-left text-sm flex items-center justify-between hover:bg-white/5 dark:hover:bg-white/5 transition-colors ${
+              className={`w-full px-3 py-2.5 text-left text-sm flex items-center justify-between hover:bg-white/5 transition-colors ${
                 lang.code === currentLang
-                  ? "text-violet dark:text-violet font-semibold"
-                  : "text-slate-muted dark:text-slate-muted"
+                  ? "text-violet-light font-semibold"
+                  : "text-slate-muted"
               }`}
             >
               <span>{lang.label}</span>
