@@ -128,15 +128,15 @@ export default function EditProfilePage({ params: { lang } }: { params: { lang: 
           <div className="space-y-6">
             {/* Avatar upload */}
             <div>
-              <label className="block text-caption text-muted uppercase tracking-wider mb-2">Profile Photo</label>
+              <label className="block text-caption uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>Profile Photo</label>
               <div className="flex items-center gap-4">
                 <div className="relative shrink-0">
                   <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-br from-violet/40 via-emerald/30 to-cyan/30">
-                    <div className="w-full h-full rounded-full bg-onyx-900 flex items-center justify-center overflow-hidden">
+                    <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: "var(--bg-primary)" }}>
                       {(avatarPreview || authUser?.avatar) ? (
                         <img src={avatarPreview || authUser?.avatar || ""} alt="" className="w-full h-full object-cover" />
                       ) : (
-                        <span className="text-lg font-bold text-muted">
+                        <span className="text-lg font-bold" style={{ color: "var(--text-muted)" }}>
                           {authUser?.handle?.charAt(0).toUpperCase() || "?"}
                         </span>
                       )}
@@ -168,7 +168,7 @@ export default function EditProfilePage({ params: { lang } }: { params: { lang: 
 
             {/* Cover upload */}
             <div>
-              <label className="block text-caption text-muted uppercase tracking-wider mb-2">Cover Image</label>
+              <label className="block text-caption uppercase tracking-wider mb-2" style={{ color: "var(--text-muted)" }}>Cover Image</label>
               <div
                 className="h-24 rounded-xl border-2 border-dashed flex items-center justify-center cursor-pointer overflow-hidden"
                 style={{ borderColor: "var(--border-color)", backgroundColor: "color-mix(in srgb, var(--bg-tertiary) 40%, transparent)" }}
@@ -178,10 +178,10 @@ export default function EditProfilePage({ params: { lang } }: { params: { lang: 
                   <img src={coverPreview || authUser?.coverUrl || ""} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <div className="text-center">
-                    <svg className="w-6 h-6 text-muted mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <svg className="w-6 h-6 mx-auto mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5} style={{ color: "var(--text-muted)" }}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                     </svg>
-                    <p className="text-caption text-muted">Upload cover image</p>
+                    <p className="text-caption" style={{ color: "var(--text-muted)" }}>Upload cover image</p>
                   </div>
                 )}
                 <input
@@ -192,13 +192,13 @@ export default function EditProfilePage({ params: { lang } }: { params: { lang: 
                   className="hidden"
                 />
               </div>
-              {uploading.cover && <p className="text-caption text-muted mt-1">Uploading cover...</p>}
+              {uploading.cover && <p className="text-caption mt-1" style={{ color: "var(--text-muted)" }}>Uploading cover...</p>}
             </div>
 
             {/* Form fields */}
             {(["handle", "headline", "bio", "location", "website", "company", "sector"] as const).map((field) => (
               <div key={field}>
-                <label className="block text-caption text-muted uppercase tracking-wider mb-1.5">
+                <label className="block text-caption uppercase tracking-wider mb-1.5" style={{ color: "var(--text-muted)" }}>
                   {t(`profile.edit.${field === "company" ? "company" : field === "handle" ? "handle" : field === "headline" ? "headline" : field === "bio" ? "bio" : field}`)}
                 </label>
                 {field === "bio" ? (

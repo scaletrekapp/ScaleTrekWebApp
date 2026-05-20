@@ -45,7 +45,7 @@ export function FounderCard({
             <div className="flex items-center gap-3.5 min-w-0">
               <div className="relative shrink-0">
                 <div className="w-11 h-11 rounded-full p-[2px] bg-gradient-to-br from-violet/40 via-emerald/30 to-cyan/30">
-                  <div className="w-full h-full rounded-full bg-onyx-900 flex items-center justify-center overflow-hidden">
+                  <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: "var(--bg-primary)" }}>
                     {avatar && !imgError ? (
                       <img src={avatar} alt="" className="w-full h-full object-cover" onError={() => setImgError(true)} />
                     ) : (
@@ -58,15 +58,15 @@ export function FounderCard({
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-subhead text-white truncate">{name}</h3>
-                  <span className="text-caption text-muted">@{handle}</span>
+                  <h3 className="text-subhead truncate" style={{ color: "var(--text-primary)" }}>{name}</h3>
+                  <span className="text-caption" style={{ color: "var(--text-muted)" }}>@{handle}</span>
                   <span className={`text-micro px-1.5 py-0.5 rounded font-semibold uppercase ${
                     type === "reality" ? "bg-emerald-muted text-emerald" : "bg-violet-muted text-violet-light"
                   }`}>
                     {type}
                   </span>
                 </div>
-                <p className="text-body text-muted truncate mt-0.5">{headline}</p>
+                <p className="text-body truncate mt-0.5" style={{ color: "var(--text-muted)" }}>{headline}</p>
               </div>
             </div>
             <MomentumRing score={momentumScore} size="sm" onClick={() => setDrawerOpen(true)} />
@@ -89,7 +89,7 @@ export function FounderCard({
           {tags && tags.length > 0 && (
             <div className="flex flex-wrap gap-1.5 mb-4">
               {tags.map((tag) => (
-                <span key={tag} className="text-micro px-2 py-0.5 rounded-full bg-onyx-700/40 text-muted">
+                <span key={tag} className="text-micro px-2 py-0.5 rounded-full" style={{ backgroundColor: "color-mix(in srgb, var(--bg-tertiary) 60%, transparent)", color: "var(--text-muted)" }}>
                   {tag}
                 </span>
               ))}
@@ -97,7 +97,7 @@ export function FounderCard({
           )}
 
           {/* Row 4: Actions */}
-          <div className="flex items-center gap-2 pt-3 border-t border-onyx-700/50">
+          <div className="flex items-center gap-2 pt-3" style={{ borderTop: "1px solid var(--border-color)" }}>
             <button
               onClick={onMessage}
               className="btn-secondary btn-sm"

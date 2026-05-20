@@ -54,7 +54,7 @@ function ScoreRing({ value, size = 88, color = "var(--violet)", label }: { value
           {value}
         </text>
       </svg>
-      <span className="text-caption text-muted uppercase tracking-wider">{label}</span>
+      <span className="text-caption uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>{label}</span>
     </div>
   );
 }

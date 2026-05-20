@@ -118,23 +118,24 @@ export function MomentumStories() {
             >
               <div className="relative" style={{ filter: "drop-shadow(0 0 6px rgba(99,102,241,0.25))" }}>
                 <div className="w-14 h-14 rounded-full p-[2px] bg-gradient-to-br from-violet via-emerald to-cyan">
-                  <div className="w-full h-full rounded-full bg-onyx-900 flex items-center justify-center overflow-hidden">
+                  <div className="w-full h-full rounded-full flex items-center justify-center overflow-hidden" style={{ backgroundColor: "var(--bg-primary)" }}>
                     {story.userAvatar ? (
                       <img src={story.userAvatar} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="text-sm font-bold text-violet-light">
+                      <span className="text-sm font-bold" style={{ color: "var(--violet-light)" }}>
                         {story.userName.charAt(0).toUpperCase()}
                       </span>
                     )}
                   </div>
                 </div>
-                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-onyx-900 border-2 border-onyx-900 flex items-center justify-center">
-                  <svg className="w-2.5 h-2.5 text-slate-muted" viewBox="0 0 24 24" fill="currentColor">
+                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: "var(--bg-primary)", border: "2px solid var(--bg-primary)" }}>
+                  <svg className="w-2.5 h-2.5" viewBox="0 0 24 24" fill="currentColor" style={{ color: "var(--text-muted)" }}>
                     <path d={TYPE_ICONS[story.type]} />
                   </svg>
                 </div>
               </div>
-              <span className="text-[10px] text-slate-muted truncate max-w-[56px] leading-none">{story.thumbnailLabel}</span>
+              <span className="text-[10px] truncate max-w-[56px] leading-none" style={{ color: "var(--text-muted)" }}>{story.thumbnailLabel}</span>
             </motion.button>
           ))}
         </div>
